@@ -100,7 +100,7 @@ export function BookQuoteStudio() {
   const [query, setQuery] = useState("");
   const [quote, setQuote] = useState("কিছু মানুষ দূরে গিয়েও থেকে যায়— পুরোনো বইয়ের পাতায় রাখা শুকনো ফুলের মতো।");
   const [author, setAuthor] = useState("মধ্যরাতের চিরকুট");
-  const [fontSize, setFontSize] = useState(31);
+  const [fontSize, setFontSize] = useState(24);
   const [align, setAlign] = useState<"left" | "center" | "right">("center");
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -296,7 +296,7 @@ export function BookQuoteStudio() {
           </div>
           <div className="control-section">
             <div className="control-label"><span>লেখার মাপ</span><strong>{fontSize}px</strong></div>
-            <input type="range" min="24" max="42" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
+            <input type="range" min="18" max="34" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
           </div>
           <div className="control-section">
             <div className="control-label">সাজানো</div>
