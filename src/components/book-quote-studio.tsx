@@ -18,6 +18,7 @@ import {
   Sparkles,
   Volume2,
   Mic2,
+  Quote,
 } from "lucide-react";
 
 import loneManBook from "@/assets/book-lone-man-midnight.jpg";
@@ -103,6 +104,21 @@ const videoFormats = [
   { id: "square", label: "Square Post", detail: "1:1 · 1080 × 1080", width: 1080, height: 1080 },
 ] as const;
 
+const quoteLibrary = [
+  { id: 1, category: "একাকিত্ব", text: "কিছু মানুষ দূরে গিয়েও থেকে যায়— পুরোনো স্মৃতির ভাঁজে রাখা শুকনো ফুলের মতো।", author: "মধ্যরাতের চিরকুট" },
+  { id: 2, category: "অপেক্ষা", text: "অপেক্ষা মানুষকে বদলে দেয়; কেউ ফিরে আসে, আর কেউ অপেক্ষাতেই হারিয়ে যায়।", author: "মধ্যরাতের চিরকুট" },
+  { id: 3, category: "বিচ্ছেদ", text: "তুমি চলে যাওয়ার পর শহরটা একই আছে, শুধু আমার ফেরার ঠিকানা বদলে গেছে।", author: "মধ্যরাতের চিরকুট" },
+  { id: 4, category: "বৃষ্টি", text: "বৃষ্টি নামলেই কিছু পুরোনো কথার শব্দ জানালায় এসে জমে।", author: "মধ্যরাতের চিরকুট" },
+  { id: 5, category: "স্মৃতি", text: "স্মৃতি কখনো পুরোনো হয় না, শুধু মানুষ তাকে লুকিয়ে রাখতে শিখে যায়।", author: "মধ্যরাতের চিরকুট" },
+  { id: 6, category: "বিদায়", text: "সব বিদায় মুখে বলা হয় না; কিছু বিদায় নীরবতায় সারাজীবন বাজে।", author: "মধ্যরাতের চিরকুট" },
+  { id: 7, category: "জীবন", text: "যে পথ একা হাঁটতে শেখায়, সেই পথই একদিন নিজের কাছে ফিরিয়ে আনে।", author: "মধ্যরাতের চিরকুট" },
+  { id: 8, category: "ভালোবাসা", text: "ভালোবাসা থেকে যায়— মানুষটি না থাকলেও তার রেখে যাওয়া আলোয়।", author: "মধ্যরাতের চিরকুট" },
+  { id: 9, category: "English", text: "Some goodbyes never leave; they simply learn to live quietly inside us.", author: "Midnight Note" },
+  { id: 10, category: "English", text: "The loneliest nights often teach the heart how to become its own light.", author: "Midnight Note" },
+  { id: 11, category: "English", text: "Not every distance is measured in miles; some begin between two silent hearts.", author: "Midnight Note" },
+  { id: 12, category: "English", text: "We carry old memories like pressed flowers—fragile, faded, and impossible to throw away.", author: "Midnight Note" },
+] as const;
+
 function saveBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -145,6 +161,8 @@ export function BookQuoteStudio() {
   const [isExporting, setIsExporting] = useState(false);
   const [duration, setDuration] = useState<(typeof durations)[number]>(10);
   const [formatId, setFormatId] = useState<(typeof videoFormats)[number]["id"]>("reel-hd");
+  const [quoteDesignId, setQuoteDesignId] = useState(templates[0]?.id ?? 1);
+  const [quoteLibraryFilter, setQuoteLibraryFilter] = useState("সব");
   const [mobilePanel, setMobilePanel] = useState<"templates" | "canvas" | "edit">("canvas");
   const imageRef = useRef<HTMLImageElement>(null);
   const safeAreaRef = useRef<HTMLDivElement>(null);
@@ -167,6 +185,10 @@ export function BookQuoteStudio() {
       template.title.toLowerCase().includes(query.toLowerCase()),
     ),
     [activeFilter, query],
+  );
+  const visibleQuotes = useMemo(
+    () => quoteLibrary.filter((item) => quoteLibraryFilter === "সব" || item.category === quoteLibraryFilter),
+    [quoteLibraryFilter],
   );
 
   if (!current) return null;
@@ -211,6 +233,22 @@ export function BookQuoteStudio() {
     if (interactionRef.current?.pointerId !== event.pointerId) return;
     interactionRef.current = null;
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+
+  const applyTemplate = (template: Template) => {
+    setSelected(templates.findIndex((item) => item.id === template.id));
+    setQuoteDesignId(template.id);
+    setTextColor(template.ink);
+    setQuotePosition({ x: template.quoteLeft, y: template.quoteTop });
+  };
+
+  const applyLibraryQuote = (item: (typeof quoteLibrary)[number]) => {
+    const design = templates.find((template) => template.id === quoteDesignId) ?? current;
+    setQuote(item.text);
+    setAuthor(item.author);
+    setShowQuoteBy(true);
+    applyTemplate(design);
+    setMobilePanel("canvas");
   };
 
   const drawFrame = (context: CanvasRenderingContext2D, image: HTMLImageElement, progress = 0) => {
@@ -358,9 +396,7 @@ export function BookQuoteStudio() {
                 variant="ghost"
                 className={cn("template-card", current.id === template.id && "is-selected")}
                 onClick={() => {
-                  setSelected(templates.findIndex((item) => item.id === template.id));
-                  setTextColor(template.ink);
-                  setQuotePosition({ x: template.quoteLeft, y: template.quoteTop });
+                  applyTemplate(template);
                   setMobilePanel("canvas");
                 }}
                 aria-label={`${template.title} বেছে নিন`}
@@ -444,6 +480,27 @@ export function BookQuoteStudio() {
           <div className="control-section">
             <div className="control-label"><span>কোট</span><span>{quote.length}/১৩০</span></div>
             <textarea maxLength={130} value={quote} onChange={(event) => setQuote(event.target.value)} />
+          </div>
+          <div className="control-section quote-library">
+            <div className="control-label"><span className="inline-flex items-center gap-1"><Quote /> কোট লাইব্রেরি</span><span>{visibleQuotes.length}টি</span></div>
+            <div className="quote-filter-row">
+              {["সব", "একাকিত্ব", "অপেক্ষা", "বিচ্ছেদ", "স্মৃতি", "English"].map((filter) => (
+                <Button key={filter} type="button" size="sm" variant={quoteLibraryFilter === filter ? "default" : "outline"} onClick={() => setQuoteLibraryFilter(filter)}>{filter}</Button>
+              ))}
+            </div>
+            <label className="control-label quote-design-label" htmlFor="quoteDesign"><span>কোন ডিজাইনে দেখাবেন</span></label>
+            <select id="quoteDesign" value={quoteDesignId} onChange={(event) => setQuoteDesignId(Number(event.target.value))}>
+              {templates.map((template) => <option key={template.id} value={template.id}>{String(template.id).padStart(2, "0")} — {template.title}</option>)}
+            </select>
+            <div className="quote-library-list">
+              {visibleQuotes.map((item) => (
+                <article className="quote-library-item" key={item.id}>
+                  <span>{item.category}</span>
+                  <p>{item.text}</p>
+                  <Button type="button" size="sm" variant="outline" onClick={() => applyLibraryQuote(item)}>এই কোট ব্যবহার করুন</Button>
+                </article>
+              ))}
+            </div>
           </div>
           <div className="control-section">
             <label className="control-label" htmlFor="author"><span>Quote By</span><span>ঐচ্ছিক</span></label>
