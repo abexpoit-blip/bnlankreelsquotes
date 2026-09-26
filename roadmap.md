@@ -5,4 +5,4 @@
 - [x] Keep quotes realistically printed, highly readable, and editable.
 - [x] Verify desktop and mobile presentation and core interactions.
 - [x] Add optional Quote By and Voice By credits, fixed Shovon branding, selectable duration, and social-video sizes.
-- [ ] Keep one premium book scene and replace the other book scenes with distinct sad-moment templates with reliably clear text.
+- [x] Keep one premium book scene and replace the other book scenes with distinct sad-moment templates with reliably clear text.

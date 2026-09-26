@@ -21,25 +21,25 @@ import {
 } from "lucide-react";
 
 import rainBook from "@/assets/book-rain-window.jpg";
-import moonBook from "@/assets/book-midnight-moon.jpg";
-import teaBook from "@/assets/book-solitude-tea.jpg";
-import flowerBook from "@/assets/book-flowers-sun.jpg";
-import autumnBook from "@/assets/book-autumn-desk.jpg";
-import seaBook from "@/assets/book-sea-breeze.jpg";
-import forestBook from "@/assets/book-forest-moss.jpg";
-import roseBook from "@/assets/book-rose-evening.jpg";
 import loneManBook from "@/assets/book-lone-man-midnight.jpg";
-import magicDoveBook from "@/assets/book-magic-dove.jpg";
-import grassCoversBook from "@/assets/book-grass-covers.jpg";
-import highlightedPageBook from "@/assets/book-highlighted-page.jpg";
-import trainWindowBook from "@/assets/book-train-window.jpg";
-import candleLibraryBook from "@/assets/book-candle-library.jpg";
-import snowWindowBook from "@/assets/book-snow-window.jpg";
-import lanternRiverBook from "@/assets/book-lantern-river.jpg";
-import coffeeCafeBook from "@/assets/book-coffee-cafe.jpg";
-import sunflowerFieldBook from "@/assets/book-sunflower-field.jpg";
 import rooftopRainBook from "@/assets/book-rooftop-rain.jpg";
-import boatDawnBook from "@/assets/book-boat-dawn.jpg";
+import sadSeaSolitude from "@/assets/sad-sea-solitude.jpg";
+import sadRainWindow from "@/assets/sad-rain-window.jpg";
+import sadEmptyBench from "@/assets/sad-empty-bench.jpg";
+import sadTrainFarewell from "@/assets/sad-train-farewell.jpg";
+import sadEmptySwing from "@/assets/sad-empty-swing.jpg";
+import sadMidnightStreet from "@/assets/sad-midnight-street.jpg";
+import sadWitheredFlowers from "@/assets/sad-withered-flowers.jpg";
+import sadRooftopRain from "@/assets/sad-rooftop-rain.jpg";
+import sadEmptyCafe from "@/assets/sad-empty-cafe.jpg";
+import sadLostBoat from "@/assets/sad-lost-boat.jpg";
+import sadTwilightTree from "@/assets/sad-twilight-tree.jpg";
+import sadUnansweredCall from "@/assets/sad-unanswered-call.jpg";
+import sadFoggyRoad from "@/assets/sad-foggy-road.jpg";
+import sadHospitalCorridor from "@/assets/sad-hospital-corridor.jpg";
+import sadLastRose from "@/assets/sad-last-rose.jpg";
+import sadRiverPier from "@/assets/sad-river-pier.jpg";
+import sadEmptyRoom from "@/assets/sad-empty-room.jpg";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -59,26 +59,26 @@ type Template = {
 };
 
 const scenes: Omit<Template, "id">[] = [
-  { title: "বৃষ্টির জানালা", category: "বৃষ্টি", image: rainBook, position: "center", tone: "tone-cool", quoteTop: 62, quoteLeft: 70, quoteWidth: 34, quoteRotate: 1.2, ink: "#31251c", textStyle: "ink" },
-  { title: "চাঁদের বই", category: "রাত", image: moonBook, position: "center", tone: "tone-midnight", quoteTop: 62, quoteLeft: 69, quoteWidth: 35, quoteRotate: 1.8, ink: "#34271e", textStyle: "ink" },
-  { title: "নির্জন বিকেল", category: "একাকিত্ব", image: teaBook, position: "center", tone: "tone-olive", quoteTop: 63, quoteLeft: 68, quoteWidth: 34, quoteRotate: 1.5, ink: "#293226", textStyle: "ink" },
-  { title: "ফুলের সকাল", category: "ফুল", image: flowerBook, position: "center", tone: "tone-coral", quoteTop: 58, quoteLeft: 70, quoteWidth: 33, quoteRotate: 2.4, ink: "#49342d", textStyle: "ink" },
-  { title: "পুরোনো চিঠি", category: "ভিনটেজ", image: autumnBook, position: "center", tone: "tone-amber", quoteTop: 66, quoteLeft: 69, quoteWidth: 34, quoteRotate: 1.8, ink: "#3d2919", textStyle: "ink" },
-  { title: "সমুদ্র হাওয়া", category: "প্রকৃতি", image: seaBook, position: "center", tone: "tone-sea", quoteTop: 70, quoteLeft: 69, quoteWidth: 34, quoteRotate: 1.2, ink: "#26383b", textStyle: "ink" },
-  { title: "বনের নীরবতা", category: "প্রকৃতি", image: forestBook, position: "center", tone: "tone-forest", quoteTop: 70, quoteLeft: 69, quoteWidth: 32, quoteRotate: 2.2, ink: "#283021", textStyle: "ink" },
-  { title: "গোধূলির গোলাপ", category: "অনুভূতি", image: roseBook, position: "center", tone: "tone-rose", quoteTop: 61, quoteLeft: 70, quoteWidth: 34, quoteRotate: 1.1, ink: "#442522", textStyle: "ink" },
-  { title: "মধ্যরাতের একাকী", category: "একাকিত্ব", image: loneManBook, position: "center", tone: "tone-midnight", quoteTop: 30, quoteLeft: 30, quoteWidth: 46, quoteRotate: 0, ink: "#f4ead7", textStyle: "light" },
-  { title: "শব্দের ডানা", category: "অনুভূতি", image: magicDoveBook, position: "center", tone: "tone-amber", quoteTop: 25, quoteLeft: 29, quoteWidth: 44, quoteRotate: 0, ink: "#f8edda", textStyle: "light" },
-  { title: "সবুজ প্রচ্ছদ", category: "প্রকৃতি", image: grassCoversBook, position: "center", tone: "tone-forest", quoteTop: 27, quoteLeft: 33, quoteWidth: 54, quoteRotate: 0, ink: "#243029", textStyle: "bold" },
-  { title: "হাইলাইটেড পাতা", category: "ভিনটেজ", image: highlightedPageBook, position: "center", tone: "tone-amber", quoteTop: 59, quoteLeft: 67, quoteWidth: 45, quoteRotate: -1.4, ink: "#33291f", textStyle: "ink" },
-  { title: "বৃষ্টির ট্রেন", category: "বৃষ্টি", image: trainWindowBook, position: "center", tone: "tone-cool", quoteTop: 67, quoteLeft: 68, quoteWidth: 36, quoteRotate: 2.4, ink: "#33271f", textStyle: "ink" },
-  { title: "মোমের লাইব্রেরি", category: "ভিনটেজ", image: candleLibraryBook, position: "center", tone: "tone-rose", quoteTop: 61, quoteLeft: 30, quoteWidth: 37, quoteRotate: -1.8, ink: "#3b281c", textStyle: "ink" },
-  { title: "তুষারের জানালা", category: "প্রকৃতি", image: snowWindowBook, position: "center", tone: "tone-cool", quoteTop: 65, quoteLeft: 70, quoteWidth: 35, quoteRotate: 1.6, ink: "#30343b", textStyle: "ink" },
-  { title: "নদীর লণ্ঠন", category: "প্রকৃতি", image: lanternRiverBook, position: "center", tone: "tone-sea", quoteTop: 71, quoteLeft: 31, quoteWidth: 36, quoteRotate: -1.1, ink: "#34291e", textStyle: "ink" },
-  { title: "বৃষ্টির ক্যাফে", category: "বৃষ্টি", image: coffeeCafeBook, position: "center", tone: "tone-amber", quoteTop: 70, quoteLeft: 70, quoteWidth: 35, quoteRotate: 1.4, ink: "#30261e", textStyle: "ink" },
-  { title: "সূর্যমুখীর কবিতা", category: "ফুল", image: sunflowerFieldBook, position: "center", tone: "tone-coral", quoteTop: 61, quoteLeft: 29, quoteWidth: 36, quoteRotate: -1.4, ink: "#3d2c1d", textStyle: "ink" },
-  { title: "ছাদের বৃষ্টি", category: "একাকিত্ব", image: rooftopRainBook, position: "center", tone: "tone-midnight", quoteTop: 29, quoteLeft: 70, quoteWidth: 45, quoteRotate: 0, ink: "#f6eee1", textStyle: "light" },
-  { title: "নৌকার ভোর", category: "প্রকৃতি", image: boatDawnBook, position: "center", tone: "tone-sea", quoteTop: 70, quoteLeft: 29, quoteWidth: 35, quoteRotate: -1.3, ink: "#382b20", textStyle: "ink" },
+  { title: "বৃষ্টির বই", category: "বই", image: rainBook, position: "center", tone: "tone-cool", quoteTop: 62, quoteLeft: 70, quoteWidth: 34, quoteRotate: 1.2, ink: "#31251c", textStyle: "ink" },
+  { title: "সমুদ্রের একাকী", category: "একাকিত্ব", image: sadSeaSolitude, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#f7f2e8", textStyle: "light" },
+  { title: "জানালার অপেক্ষা", category: "বৃষ্টি", image: sadRainWindow, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 43, quoteWidth: 68, quoteRotate: 0, ink: "#f7f2e8", textStyle: "light" },
+  { title: "খালি বেঞ্চ", category: "বৃষ্টি", image: sadEmptyBench, position: "center", tone: "tone-amber", quoteTop: 38, quoteLeft: 60, quoteWidth: 66, quoteRotate: 0, ink: "#fff4df", textStyle: "light" },
+  { title: "শেষ ট্রেন", category: "বিদায়", image: sadTrainFarewell, position: "center", tone: "tone-amber", quoteTop: 31, quoteLeft: 60, quoteWidth: 64, quoteRotate: 0, ink: "#fff5e6", textStyle: "light" },
+  { title: "ফেলে আসা শৈশব", category: "স্মৃতি", image: sadEmptySwing, position: "center", tone: "tone-olive", quoteTop: 27, quoteLeft: 60, quoteWidth: 66, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "মধ্যরাতের পথ", category: "একাকিত্ব", image: sadMidnightStreet, position: "center", tone: "tone-midnight", quoteTop: 25, quoteLeft: 50, quoteWidth: 78, quoteRotate: 0, ink: "#fff6e9", textStyle: "light" },
+  { title: "শুকনো ফুল", category: "স্মৃতি", image: sadWitheredFlowers, position: "center", tone: "tone-rose", quoteTop: 27, quoteLeft: 52, quoteWidth: 72, quoteRotate: 0, ink: "#f9f3ea", textStyle: "light" },
+  { title: "ছাদের বিষণ্নতা", category: "বৃষ্টি", image: sadRooftopRain, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#f8f2e8", textStyle: "light" },
+  { title: "অপেক্ষার ক্যাফে", category: "অপেক্ষা", image: sadEmptyCafe, position: "center", tone: "tone-amber", quoteTop: 28, quoteLeft: 57, quoteWidth: 68, quoteRotate: 0, ink: "#fff6e8", textStyle: "light" },
+  { title: "হারানো নৌকা", category: "বিদায়", image: sadLostBoat, position: "center", tone: "tone-sea", quoteTop: 25, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#273540", textStyle: "bold" },
+  { title: "গোধূলির মানুষ", category: "একাকিত্ব", image: sadTwilightTree, position: "center", tone: "tone-forest", quoteTop: 30, quoteLeft: 58, quoteWidth: 68, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "না-আসা ফোন", category: "অপেক্ষা", image: sadUnansweredCall, position: "center", tone: "tone-midnight", quoteTop: 30, quoteLeft: 48, quoteWidth: 70, quoteRotate: 0, ink: "#f8f1e7", textStyle: "light" },
+  { title: "কুয়াশার বিদায়", category: "বিদায়", image: sadFoggyRoad, position: "center", tone: "tone-cool", quoteTop: 28, quoteLeft: 50, quoteWidth: 72, quoteRotate: 0, ink: "#26343b", textStyle: "bold" },
+  { title: "নীরব করিডর", category: "অপেক্ষা", image: sadHospitalCorridor, position: "center", tone: "tone-cool", quoteTop: 29, quoteLeft: 58, quoteWidth: 66, quoteRotate: 0, ink: "#f6f3ec", textStyle: "light" },
+  { title: "শেষ গোলাপ", category: "বিচ্ছেদ", image: sadLastRose, position: "center", tone: "tone-rose", quoteTop: 25, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#fff4ea", textStyle: "light" },
+  { title: "নদীর ধারে", category: "একাকিত্ব", image: sadRiverPier, position: "center", tone: "tone-sea", quoteTop: 27, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#f8f2e9", textStyle: "light" },
+  { title: "শূন্য ঘর", category: "স্মৃতি", image: sadEmptyRoom, position: "center", tone: "tone-cool", quoteTop: 25, quoteLeft: 48, quoteWidth: 72, quoteRotate: 0, ink: "#f8f3eb", textStyle: "light" },
+  { title: "নিঃসঙ্গ রাত", category: "একাকিত্ব", image: loneManBook, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#f8f1e7", textStyle: "light" },
+  { title: "বৃষ্টিভেজা ছাদ", category: "বৃষ্টি", image: rooftopRainBook, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
 ];
 
 const templates: Template[] = scenes.map((scene, index) => ({ id: index + 1, ...scene }));
@@ -90,7 +90,7 @@ const fontOptions = [
   { id: "playfair", label: "Playfair Display", sample: "Aa Bb Cc", family: "'Playfair Display', serif" },
 ] as const;
 
-const filters = ["সব", "একাকিত্ব", "বৃষ্টি", "রাত", "ফুল", "প্রকৃতি", "ভিনটেজ", "অনুভূতি"];
+const filters = ["সব", "বই", "একাকিত্ব", "বৃষ্টি", "বিদায়", "স্মৃতি", "অপেক্ষা", "বিচ্ছেদ"];
 
 const durations = [6, 10, 15, 20, 30] as const;
 

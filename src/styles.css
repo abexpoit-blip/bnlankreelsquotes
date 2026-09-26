@@ -198,7 +198,7 @@
   .safe-area { position: absolute; inset: 5%; }
   .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 25%, transparent); filter: saturate(.72) contrast(1.18); mix-blend-mode: multiply; }
   .printed-quote p { white-space: pre-wrap; }
-  .printed-quote.text-light { text-shadow: 0 2px 12px color-mix(in oklab, var(--foreground) 86%, transparent); filter: none; mix-blend-mode: normal; }
+  .printed-quote.text-light { padding: 13px 15px; border-left: 2px solid color-mix(in oklab, currentColor 62%, transparent); background: linear-gradient(90deg, color-mix(in oklab, var(--foreground) 58%, transparent), color-mix(in oklab, var(--foreground) 26%, transparent) 72%, transparent); text-shadow: 0 2px 12px color-mix(in oklab, var(--foreground) 92%, transparent); filter: none; mix-blend-mode: normal; }
   .printed-quote.text-bold { padding: 10px 12px; border-left: 3px solid currentColor; background: color-mix(in oklab, var(--card) 72%, transparent); text-shadow: none; filter: none; mix-blend-mode: normal; }
   .quote-mark { position: absolute; top: -18px; left: -2px; font-size: 30px; line-height: 1; opacity: .16; }
   .author-line { display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 700; opacity: .88; }
