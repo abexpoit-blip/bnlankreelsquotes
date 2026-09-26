@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -392,7 +392,7 @@ export function BookQuoteStudio() {
             <div className="color-control">
               <input id="textColor" type="color" value={textColor} onChange={(event) => setTextColor(event.target.value)} />
               {["#fff4e8", "#f7f2e8", "#1f2523", "#f3c969", "#d8e9f0", "#f2b8b5"].map((color) => (
-                <Button key={color} type="button" variant="outline" size="icon" className="color-swatch" style={{ "--swatch-color": color } as React.CSSProperties} onClick={() => setTextColor(color)} aria-label={`${color} রঙ বেছে নিন`}><span /></Button>
+                <Button key={color} type="button" variant="outline" size="icon" className="color-swatch" style={{ "--swatch-color": color } as CSSProperties} onClick={() => setTextColor(color)} aria-label={`${color} রঙ বেছে নিন`}><span /></Button>
               ))}
             </div>
           </div>
