@@ -4,10 +4,10 @@ import { BookQuoteStudio } from "@/components/book-quote-studio";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "মধ্যরাতের চিরকুট — Premium Book Reel Studio" },
-      { name: "description", content: "বাস্তব বইয়ের পাতায় বাংলা কোট বসিয়ে Facebook Reels তৈরি করুন।" },
-      { property: "og:title", content: "মধ্যরাতের চিরকুট — Premium Book Reel Studio" },
-      { property: "og:description", content: "২৪টি প্রিমিয়াম বই টেমপ্লেটে বাংলা কোট রিল তৈরি করুন।" },
+      { title: "মধ্যরাতের চিরকুট — আবেগময় Reel Studio" },
+      { name: "description", content: "আলাদা আবেগময় দৃশ্যে বাংলা ও ইংরেজি কোট বসিয়ে Facebook Reels তৈরি করুন।" },
+      { property: "og:title", content: "মধ্যরাতের চিরকুট — আবেগময় Reel Studio" },
+      { property: "og:description", content: "২০টি স্বতন্ত্র আবেগময় টেমপ্লেটে কোট রিল তৈরি করুন।" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
