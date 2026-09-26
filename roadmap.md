@@ -10,3 +10,4 @@
 - [x] Let users drag the quote block and resize it directly on desktop or mobile while keeping export placement identical.
 - [x] Add a ready-made Bangla and English quote library with a design selector for one-click placement.
 - [x] Add selectable quote-overlay treatments and compact highlighted Quote By/Voice By credits with a same-person shortcut.
+- [x] Expand the library to 120 fully unique photorealistic emotional templates with auto-fitted readable text placement.
