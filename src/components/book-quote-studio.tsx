@@ -119,6 +119,12 @@ const quoteLibrary = [
   { id: 12, category: "English", text: "We carry old memories like pressed flowers—fragile, faded, and impossible to throw away.", author: "Midnight Note" },
 ] as const;
 
+const quoteStyles = [
+  { id: "glass", label: "Elegant Glass", detail: "স্বচ্ছ প্যানেল" },
+  { id: "editorial", label: "Editorial Line", detail: "সাহিত্যিক লাইন" },
+  { id: "spotlight", label: "Soft Spotlight", detail: "মৃদু আলো" },
+] as const;
+
 function saveBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -152,6 +158,7 @@ export function BookQuoteStudio() {
   const [voiceBy, setVoiceBy] = useState("");
   const [showQuoteBy, setShowQuoteBy] = useState(true);
   const [showVoiceBy, setShowVoiceBy] = useState(true);
+  const [sameCreditPerson, setSameCreditPerson] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [textColor, setTextColor] = useState(templates[0]?.ink ?? "#fff4e8");
   const [quotePosition, setQuotePosition] = useState({ x: templates[0]?.quoteLeft ?? 50, y: templates[0]?.quoteTop ?? 30 });
@@ -161,7 +168,7 @@ export function BookQuoteStudio() {
   const [isExporting, setIsExporting] = useState(false);
   const [duration, setDuration] = useState<(typeof durations)[number]>(10);
   const [formatId, setFormatId] = useState<(typeof videoFormats)[number]["id"]>("reel-hd");
-  const [quoteDesignId, setQuoteDesignId] = useState(templates[0]?.id ?? 1);
+  const [quoteStyleId, setQuoteStyleId] = useState<(typeof quoteStyles)[number]["id"]>("glass");
   const [quoteLibraryFilter, setQuoteLibraryFilter] = useState("সব");
   const [mobilePanel, setMobilePanel] = useState<"templates" | "canvas" | "edit">("canvas");
   const imageRef = useRef<HTMLImageElement>(null);
@@ -178,6 +185,7 @@ export function BookQuoteStudio() {
   const current = templates[selected] ?? templates[0];
   const activeFont = fontOptions.find((item) => item.id === fontId) ?? fontOptions[0];
   const activeFormat = videoFormats.find((item) => item.id === formatId) ?? videoFormats[0];
+  const displayedVoiceBy = sameCreditPerson ? author : voiceBy;
 
   const visibleTemplates = useMemo(
     () => templates.filter((template) =>
@@ -237,17 +245,14 @@ export function BookQuoteStudio() {
 
   const applyTemplate = (template: Template) => {
     setSelected(templates.findIndex((item) => item.id === template.id));
-    setQuoteDesignId(template.id);
     setTextColor(template.ink);
     setQuotePosition({ x: template.quoteLeft, y: template.quoteTop });
   };
 
   const applyLibraryQuote = (item: (typeof quoteLibrary)[number]) => {
-    const design = templates.find((template) => template.id === quoteDesignId) ?? current;
     setQuote(item.text);
     setAuthor(item.author);
     setShowQuoteBy(true);
-    applyTemplate(design);
     setMobilePanel("canvas");
   };
 
@@ -273,6 +278,19 @@ export function BookQuoteStudio() {
     const textX = align === "left" ? -(current.quoteWidth / 200) * width : align === "right" ? (current.quoteWidth / 200) * width : 0;
     const lineHeight = fontSize * outputScale * 1.42;
     const startY = -((lines.length - 1) * lineHeight) / 2;
+    const creditCount = Number(showQuoteBy && Boolean(author.trim())) + Number(showVoiceBy && Boolean(displayedVoiceBy.trim()));
+    const panelTop = startY - 25 * outputScale;
+    const panelBottom = startY + Math.max(lines.length - 1, 0) * lineHeight + (creditCount ? 56 : 24) * outputScale;
+    if (quoteStyleId === "glass") {
+      context.fillStyle = "rgba(10, 17, 20, 0.48)";
+      context.strokeStyle = "rgba(255, 255, 255, 0.16)";
+      context.lineWidth = outputScale;
+      context.beginPath();
+      context.roundRect(-(current.quoteWidth / 200) * width - 20 * outputScale, panelTop, (current.quoteWidth / 100) * width + 40 * outputScale, panelBottom - panelTop, 10 * outputScale);
+      context.fill();
+      context.stroke();
+      context.fillStyle = textColor;
+    }
     if (current.textStyle === "light") {
       context.shadowColor = "rgba(0, 0, 0, 0.78)";
       context.shadowBlur = 12 * outputScale;
@@ -283,7 +301,7 @@ export function BookQuoteStudio() {
     context.fillStyle = textColor;
     const creditStart = startY + lines.length * lineHeight + 10 * outputScale;
     if (showQuoteBy && author.trim()) context.fillText(`Quote By — ${author.trim()}`, textX, creditStart);
-    if (showVoiceBy && voiceBy.trim()) context.fillText(`Voice By — ${voiceBy.trim()}`, textX, creditStart + (showQuoteBy && author.trim() ? 15 * outputScale : 0));
+    if (showVoiceBy && displayedVoiceBy.trim()) context.fillText(`Voice By — ${displayedVoiceBy.trim()}`, textX, creditStart + (showQuoteBy && author.trim() ? 15 * outputScale : 0));
     context.restore();
     context.save();
     const footerHeight = 54 * outputScale;
@@ -422,7 +440,7 @@ export function BookQuoteStudio() {
             <div ref={safeAreaRef} className="safe-area">
               <div
                 ref={quoteRef}
-                className={cn("printed-quote", `text-${current.textStyle}`)}
+                className={cn("printed-quote", `text-${current.textStyle}`, `quote-style-${quoteStyleId}`)}
                 style={{
                   top: `${quotePosition.y}%`,
                   fontSize: `${fontSize}px`,
@@ -440,8 +458,12 @@ export function BookQuoteStudio() {
               >
                 <span className="quote-mark">“</span>
                 <p>{quote}</p>
-                {showQuoteBy && author.trim() && <span className="author-line" style={{ textAlign: align }}>Quote By — {author}</span>}
-                {showVoiceBy && voiceBy.trim() && <span className="author-line voice-line" style={{ textAlign: align }}>Voice By — {voiceBy}</span>}
+                {(showQuoteBy && author.trim() || showVoiceBy && displayedVoiceBy.trim()) && (
+                  <span className="credit-row" style={{ justifyContent: align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center" }}>
+                    {showQuoteBy && author.trim() && <span className="credit-pill"><small>Quote By</small><strong>{author}</strong></span>}
+                    {showVoiceBy && displayedVoiceBy.trim() && <span className="credit-pill voice-credit"><small>Voice By</small><strong>{displayedVoiceBy}</strong></span>}
+                  </span>
+                )}
                 <span
                   className="resize-handle"
                   role="slider"
@@ -488,9 +510,9 @@ export function BookQuoteStudio() {
                 <Button key={filter} type="button" size="sm" variant={quoteLibraryFilter === filter ? "default" : "outline"} onClick={() => setQuoteLibraryFilter(filter)}>{filter}</Button>
               ))}
             </div>
-            <label className="control-label quote-design-label" htmlFor="quoteDesign"><span>কোন ডিজাইনে দেখাবেন</span></label>
-            <select id="quoteDesign" value={quoteDesignId} onChange={(event) => setQuoteDesignId(Number(event.target.value))}>
-              {templates.map((template) => <option key={template.id} value={template.id}>{String(template.id).padStart(2, "0")} — {template.title}</option>)}
+            <label className="control-label quote-design-label" htmlFor="quoteDesign"><span>কোট দেখানোর ডিজাইন</span></label>
+            <select id="quoteDesign" value={quoteStyleId} onChange={(event) => setQuoteStyleId(event.target.value as (typeof quoteStyles)[number]["id"])}>
+              {quoteStyles.map((style) => <option key={style.id} value={style.id}>{style.label} — {style.detail}</option>)}
             </select>
             <div className="quote-library-list">
               {visibleQuotes.map((item) => (
@@ -503,13 +525,14 @@ export function BookQuoteStudio() {
             </div>
           </div>
           <div className="control-section">
+            <label className="visibility-toggle same-person-toggle"><input type="checkbox" checked={sameCreditPerson} onChange={(event) => setSameCreditPerson(event.target.checked)} /><span>Quote By ও Voice By একই ব্যক্তি</span></label>
             <label className="control-label" htmlFor="author"><span>Quote By</span><span>ঐচ্ছিক</span></label>
-            <input id="author" value={author} onChange={(event) => setAuthor(event.target.value)} placeholder="লেখক বা কোটদাতার নাম" />
+            <input id="author" value={author} onChange={(event) => setAuthor(event.target.value)} placeholder={sameCreditPerson ? "একবার নাম লিখুন" : "লেখক বা কোটদাতার নাম"} />
             <label className="visibility-toggle"><input type="checkbox" checked={showQuoteBy} onChange={(event) => setShowQuoteBy(event.target.checked)} /><span>Quote By দেখান</span></label>
           </div>
-          <div className="control-section">
+          <div className={cn("control-section", sameCreditPerson && "same-person-section")}>
             <label className="control-label" htmlFor="voiceBy"><span className="inline-flex items-center gap-1"><Mic2 /> Voice By</span><span>ঐচ্ছিক</span></label>
-            <input id="voiceBy" value={voiceBy} onChange={(event) => setVoiceBy(event.target.value)} placeholder="কণ্ঠশিল্পীর নাম" />
+            <input id="voiceBy" value={sameCreditPerson ? author : voiceBy} onChange={(event) => setVoiceBy(event.target.value)} placeholder="কণ্ঠশিল্পীর নাম" disabled={sameCreditPerson} />
             <label className="visibility-toggle"><input type="checkbox" checked={showVoiceBy} onChange={(event) => setShowVoiceBy(event.target.checked)} /><span>Voice By দেখান</span></label>
           </div>
           <div className="control-section">
