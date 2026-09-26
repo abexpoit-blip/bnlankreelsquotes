@@ -43,6 +43,7 @@ import sadRiverPier from "@/assets/sad-river-pier.jpg";
 import sadEmptyRoom from "@/assets/sad-empty-room.jpg";
 import { Button } from "@/components/ui/button";
 import { extraScenes } from "./scenes-extra";
+import { japanScenes } from "./scenes-japan";
 import { cn } from "@/lib/utils";
 
 type Template = {
@@ -85,7 +86,7 @@ const baseScenes: BaseScene[] = [
   { title: "বৃষ্টিভেজা ছাদ", category: "বৃষ্টি", image: rooftopRainBook, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
 ];
 
-const scenes: BaseScene[] = [...baseScenes, ...extraScenes];
+const scenes: BaseScene[] = [...baseScenes, ...extraScenes, ...japanScenes];
 
 const templates: Template[] = scenes.map((scene, index) => ({ ...scene, id: index + 1 }));
 
