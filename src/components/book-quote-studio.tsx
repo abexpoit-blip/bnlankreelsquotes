@@ -99,7 +99,7 @@ const fontOptions = [
 
 const filters = ["সব", "একাকিত্ব", "বৃষ্টি", "বিদায়", "স্মৃতি", "অপেক্ষা", "বিচ্ছেদ", "জাপান"];
 
-const bnNumber = (n: number) => String(n).replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[Number(d)]);
+const bnNumber = (n: number) => String(n).replace(/\d/g, (d: string) => "০১২৩৪৫৬৭৮৯"[Number(d)] ?? "০");
 
 const durations = [6, 10, 15, 20, 30] as const;
 
