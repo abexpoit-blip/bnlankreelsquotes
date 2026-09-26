@@ -196,13 +196,17 @@
   .reel-frame.is-playing > img { animation: reel-breathe 6s ease-in-out infinite; }
   .film-grain { position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: repeating-linear-gradient(110deg, transparent 0 3px, color-mix(in oklab, var(--card) 7%, transparent) 4px); mix-blend-mode: soft-light; }
   .safe-area { position: absolute; inset: 5%; }
-  .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 16%, transparent); filter: saturate(.72) contrast(1.12); mix-blend-mode: multiply; }
+  .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 25%, transparent); filter: saturate(.72) contrast(1.18); mix-blend-mode: multiply; }
   .printed-quote p { white-space: pre-wrap; }
   .printed-quote.text-light { text-shadow: 0 2px 12px color-mix(in oklab, var(--foreground) 86%, transparent); filter: none; mix-blend-mode: normal; }
   .printed-quote.text-bold { padding: 10px 12px; border-left: 3px solid currentColor; background: color-mix(in oklab, var(--card) 72%, transparent); text-shadow: none; filter: none; mix-blend-mode: normal; }
   .quote-mark { position: absolute; top: -18px; left: -2px; font-size: 30px; line-height: 1; opacity: .16; }
-  .author-line { display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 600; opacity: .78; }
-  .reel-brand { position: absolute; bottom: 1.5%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; color: var(--primary-foreground); font-size: 9px; text-shadow: 0 1px 6px color-mix(in oklab, var(--foreground) 80%, transparent); white-space: nowrap; }
+  .author-line { display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 700; opacity: .88; }
+  .voice-line { margin-top: 2px; }
+  .reel-brand { position: absolute; bottom: .5%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; color: var(--primary-foreground); font-size: 9px; text-decoration: none; text-shadow: 0 1px 7px color-mix(in oklab, var(--foreground) 90%, transparent); white-space: nowrap; }
+  .reel-brand strong, .reel-brand small { display: block; line-height: 1.15; }
+  .reel-brand strong { font-size: 9px; letter-spacing: .04em; }
+  .reel-brand small { font-size: 7px; opacity: .84; }
   .brand-mini { width: 19px; height: 19px; display: grid; place-items: center; border: 1px solid color-mix(in oklab, var(--primary-foreground) 55%, transparent); border-radius: 50%; font-family: var(--font-display); }
   .playback { width: min(100%, 480px); display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
   .playback button { flex: none; }
@@ -214,6 +218,7 @@
   .control-section { padding: 14px 0; border-top: 1px solid var(--border); }
   .control-label { display: flex; align-items: center; justify-content: space-between; color: var(--muted-foreground); font-size: 11px; font-weight: 600; margin-bottom: 7px; }
   .control-label strong { color: var(--foreground); }
+  .control-label svg { width: 13px; height: 13px; }
   .control-section textarea, .control-section input:not([type="range"]) { width: 100%; border: 1px solid var(--border); border-radius: 6px; background: var(--background); padding: 9px 10px; outline: none; font-size: 13px; }
   .control-section textarea { min-height: 92px; resize: vertical; font-family: var(--font-display); line-height: 1.6; }
   .control-section input:focus, .control-section textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 12%, transparent); }
@@ -224,6 +229,12 @@
   .font-option > span:first-child { font-size: 16px; color: var(--foreground); }
   .font-option.is-active { border-color: var(--primary); background: color-mix(in oklab, var(--primary) 6%, var(--card)); }
   .font-option > svg { width: 13px; color: var(--primary); }
+  .export-settings { display: grid; grid-template-columns: 1fr; gap: 7px; }
+  .export-settings .control-label { margin: 4px 0 0; }
+  .export-settings select { width: 100%; height: 38px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); color: var(--foreground); padding: 0 9px; outline: none; font-size: 11px; }
+  .export-settings select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 12%, transparent); }
+  .facebook-link { display: flex; align-items: center; gap: 7px; margin-top: 10px; color: var(--primary); font-size: 10px; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
+  .facebook-link svg { width: 15px; flex: none; }
   .font-book { font-family: var(--font-display); font-size: 15px; color: var(--foreground); }
   .font-clean { font-family: var(--font-sans); font-size: 15px; color: var(--foreground); }
   .export-card { display: grid; grid-template-columns: 34px 1fr auto; gap: 9px; align-items: center; padding: 11px; margin-top: 8px; background: var(--foreground); color: var(--background); border-radius: 7px; }
