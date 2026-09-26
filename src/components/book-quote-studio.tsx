@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Download,
   Film,
+  Facebook,
   ImageDown,
   LibraryBig,
   Pause,
@@ -16,6 +17,7 @@ import {
   SlidersHorizontal,
   Sparkles,
   Volume2,
+  Mic2,
 } from "lucide-react";
 
 import rainBook from "@/assets/book-rain-window.jpg";
@@ -90,6 +92,15 @@ const fontOptions = [
 
 const filters = ["সব", "একাকিত্ব", "বৃষ্টি", "রাত", "ফুল", "প্রকৃতি", "ভিনটেজ", "অনুভূতি"];
 
+const durations = [6, 10, 15, 20, 30] as const;
+
+const videoFormats = [
+  { id: "reel-hd", label: "Reels HD", detail: "9:16 · 1080 × 1920", width: 1080, height: 1920 },
+  { id: "reel-lite", label: "Reels Lite", detail: "9:16 · 720 × 1280", width: 720, height: 1280 },
+  { id: "feed", label: "Facebook Feed", detail: "4:5 · 1080 × 1350", width: 1080, height: 1350 },
+  { id: "square", label: "Square Post", detail: "1:1 · 1080 × 1080", width: 1080, height: 1080 },
+] as const;
+
 function saveBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -119,16 +130,20 @@ export function BookQuoteStudio() {
   const [activeFilter, setActiveFilter] = useState("সব");
   const [query, setQuery] = useState("");
   const [quote, setQuote] = useState("কিছু মানুষ দূরে গিয়েও থেকে যায়— পুরোনো বইয়ের পাতায় রাখা শুকনো ফুলের মতো।");
-  const [author, setAuthor] = useState("মধ্যরাতের চিরকুট");
+  const [author, setAuthor] = useState("");
+  const [voiceBy, setVoiceBy] = useState("");
   const [fontSize, setFontSize] = useState(16);
   const [align, setAlign] = useState<"left" | "center" | "right">("center");
   const [fontId, setFontId] = useState<(typeof fontOptions)[number]["id"]>("tiro");
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [duration, setDuration] = useState<(typeof durations)[number]>(10);
+  const [formatId, setFormatId] = useState<(typeof videoFormats)[number]["id"]>("reel-hd");
   const [mobilePanel, setMobilePanel] = useState<"templates" | "canvas" | "edit">("canvas");
   const imageRef = useRef<HTMLImageElement>(null);
   const current = templates[selected] ?? templates[0];
   const activeFont = fontOptions.find((item) => item.id === fontId) ?? fontOptions[0];
+  const activeFormat = videoFormats.find((item) => item.id === formatId) ?? videoFormats[0];
 
   const visibleTemplates = useMemo(
     () => templates.filter((template) =>
@@ -141,8 +156,7 @@ export function BookQuoteStudio() {
   if (!current) return null;
 
   const drawFrame = (context: CanvasRenderingContext2D, image: HTMLImageElement, progress = 0) => {
-    const width = 720;
-    const height = 1280;
+    const { width, height } = activeFormat;
     const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight) * (1 + progress * 0.035);
     const drawWidth = image.naturalWidth * scale;
     const drawHeight = image.naturalHeight * scale;
@@ -157,14 +171,33 @@ export function BookQuoteStudio() {
     context.textAlign = align;
     context.textBaseline = "middle";
     context.fillStyle = current.ink;
-    context.font = `600 ${fontSize * 2}px ${activeFont.family}`;
+    const outputScale = width / 360;
+    context.font = `600 ${fontSize * outputScale}px ${activeFont.family}`;
     const lines = wrapCanvasText(context, quote, (current.quoteWidth / 100) * width);
     const textX = align === "left" ? -(current.quoteWidth / 200) * width : align === "right" ? (current.quoteWidth / 200) * width : 0;
-    const startY = -((lines.length - 1) * fontSize * 1.35) / 2;
-    lines.forEach((line, index) => context.fillText(line, textX, startY + index * fontSize * 2.7));
-    context.font = "500 21px 'Hind Siliguri', sans-serif";
-    context.fillStyle = "rgba(41, 36, 31, 0.78)";
-    context.fillText(`— ${author}`, textX, startY + lines.length * fontSize * 2.7 + 20);
+    const lineHeight = fontSize * outputScale * 1.42;
+    const startY = -((lines.length - 1) * lineHeight) / 2;
+    if (current.textStyle === "light") {
+      context.shadowColor = "rgba(0, 0, 0, 0.78)";
+      context.shadowBlur = 12 * outputScale;
+    }
+    lines.forEach((line, index) => context.fillText(line, textX, startY + index * lineHeight));
+    context.shadowBlur = 0;
+    context.font = `600 ${10.5 * outputScale}px 'Hind Siliguri', sans-serif`;
+    context.fillStyle = current.ink;
+    const creditStart = startY + lines.length * lineHeight + 10 * outputScale;
+    if (author.trim()) context.fillText(`Quote By — ${author.trim()}`, textX, creditStart);
+    if (voiceBy.trim()) context.fillText(`Voice By — ${voiceBy.trim()}`, textX, creditStart + (author.trim() ? 15 * outputScale : 0));
+    context.restore();
+    context.save();
+    context.textAlign = "center";
+    context.font = `600 ${11 * outputScale}px 'Hind Siliguri', sans-serif`;
+    context.fillStyle = "rgba(255, 255, 255, 0.96)";
+    context.shadowColor = "rgba(0, 0, 0, 0.9)";
+    context.shadowBlur = 8 * outputScale;
+    context.fillText("Design By Shovon", width / 2, height - 35 * outputScale);
+    context.font = `500 ${8 * outputScale}px 'Hind Siliguri', sans-serif`;
+    context.fillText("facebook.com/MidnightNoteofficial", width / 2, height - 20 * outputScale);
     context.restore();
   };
 
@@ -172,8 +205,8 @@ export function BookQuoteStudio() {
     const image = imageRef.current;
     if (!image) return;
     const canvas = document.createElement("canvas");
-    canvas.width = 720;
-    canvas.height = 1280;
+    canvas.width = activeFormat.width;
+    canvas.height = activeFormat.height;
     const context = canvas.getContext("2d");
     if (!context) return;
     drawFrame(context, image);
@@ -185,8 +218,8 @@ export function BookQuoteStudio() {
     if (!image) return;
     setIsExporting(true);
     const canvas = document.createElement("canvas");
-    canvas.width = 720;
-    canvas.height = 1280;
+    canvas.width = activeFormat.width;
+    canvas.height = activeFormat.height;
     const context = canvas.getContext("2d");
     if (!context || !("captureStream" in canvas)) {
       setIsExporting(false);
@@ -202,9 +235,9 @@ export function BookQuoteStudio() {
     };
     recorder.start();
     const startedAt = performance.now();
-    const duration = 6000;
+    const durationMs = duration * 1000;
     const render = (now: number) => {
-      const progress = Math.min((now - startedAt) / duration, 1);
+      const progress = Math.min((now - startedAt) / durationMs, 1);
       drawFrame(context, image, Math.sin(progress * Math.PI) * 0.6);
       if (progress < 1) requestAnimationFrame(render);
       else recorder.stop();
@@ -228,7 +261,7 @@ export function BookQuoteStudio() {
         <div className="hidden items-center gap-2 lg:flex">
           <span className="status-dot" />
           <span className="text-xs text-muted-foreground">Auto saved</span>
-          <span className="format-pill">9:16 · 1080 × 1920</span>
+          <span className="format-pill">{activeFormat.detail}</span>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={exportImage}><ImageDown /> <span className="hidden sm:inline">ছবি</span></Button>
@@ -286,7 +319,7 @@ export function BookQuoteStudio() {
             <div><span className="live-dot" /> লাইভ প্রিভিউ</div>
             <div className="flex items-center gap-2"><Sparkles /> HD Preview <ChevronDown /></div>
           </div>
-          <div className={cn("reel-frame", current.tone, isPlaying && "is-playing")}>
+          <div className={cn("reel-frame", current.tone, isPlaying && "is-playing")} style={{ aspectRatio: `${activeFormat.width} / ${activeFormat.height}` }}>
             <img ref={imageRef} src={current.image} alt={`${current.title} ওপেন বুক টেমপ্লেট`} width={768} height={1376} style={{ objectPosition: current.position }} />
             <div className="film-grain" />
             <div className="safe-area">
@@ -305,9 +338,12 @@ export function BookQuoteStudio() {
               >
                 <span className="quote-mark">“</span>
                 <p>{quote}</p>
-                <span className="author-line" style={{ textAlign: align }}>— {author}</span>
+                {author.trim() && <span className="author-line" style={{ textAlign: align }}>Quote By — {author}</span>}
+                {voiceBy.trim() && <span className="author-line voice-line" style={{ textAlign: align }}>Voice By — {voiceBy}</span>}
               </div>
-              <div className="reel-brand"><span className="brand-mini">ম</span><span>মধ্যরাতের চিরকুট</span></div>
+              <a className="reel-brand" href="https://www.facebook.com/MidnightNoteofficial" target="_blank" rel="noreferrer" aria-label="মধ্যরাতের চিরকুট Facebook পেজ">
+                <span className="brand-mini">ম</span><span><strong>Design By Shovon</strong><small>মধ্যরাতের চিরকুট</small></span>
+              </a>
             </div>
           </div>
           <div className="playback">
@@ -316,7 +352,7 @@ export function BookQuoteStudio() {
             </Button>
             <span className="timecode">00:00</span>
             <div className="timeline"><span className={cn(isPlaying && "timeline-running")} /></div>
-            <span className="timecode">00:06</span>
+            <span className="timecode">00:{String(duration).padStart(2, "0")}</span>
             <Button variant="ghost" size="icon" aria-label="অডিও"><Volume2 /></Button>
           </div>
         </section>
@@ -331,8 +367,12 @@ export function BookQuoteStudio() {
             <textarea maxLength={130} value={quote} onChange={(event) => setQuote(event.target.value)} />
           </div>
           <div className="control-section">
-            <label className="control-label" htmlFor="author">লেখক / পেজ</label>
-            <input id="author" value={author} onChange={(event) => setAuthor(event.target.value)} />
+            <label className="control-label" htmlFor="author"><span>Quote By</span><span>ঐচ্ছিক</span></label>
+            <input id="author" value={author} onChange={(event) => setAuthor(event.target.value)} placeholder="লেখক বা কোটদাতার নাম" />
+          </div>
+          <div className="control-section">
+            <label className="control-label" htmlFor="voiceBy"><span className="inline-flex items-center gap-1"><Mic2 /> Voice By</span><span>ঐচ্ছিক</span></label>
+            <input id="voiceBy" value={voiceBy} onChange={(event) => setVoiceBy(event.target.value)} placeholder="কণ্ঠশিল্পীর নাম" />
           </div>
           <div className="control-section">
             <div className="control-label"><span>লেখার মাপ</span><strong>{fontSize}px</strong></div>
@@ -347,7 +387,7 @@ export function BookQuoteStudio() {
             </div>
           </div>
           <div className="control-section font-preview">
-            <div className="control-label">বাংলা ফন্ট</div>
+            <div className="control-label"><span>বাংলা ও ইংরেজি ফন্ট</span><span>Smart contrast</span></div>
             {fontOptions.map((font) => (
               <Button
                 key={font.id}
@@ -362,9 +402,20 @@ export function BookQuoteStudio() {
               </Button>
             ))}
           </div>
+          <div className="control-section export-settings">
+            <label className="control-label" htmlFor="duration">ভিডিও সময়</label>
+            <select id="duration" value={duration} onChange={(event) => setDuration(Number(event.target.value) as (typeof durations)[number])}>
+              {durations.map((seconds) => <option key={seconds} value={seconds}>{seconds} সেকেন্ড</option>)}
+            </select>
+            <label className="control-label" htmlFor="format">ভিডিও সাইজ ও অনুপাত</label>
+            <select id="format" value={formatId} onChange={(event) => setFormatId(event.target.value as (typeof videoFormats)[number]["id"])}>
+              {videoFormats.map((format) => <option key={format.id} value={format.id}>{format.label} — {format.detail}</option>)}
+            </select>
+          </div>
+          <a className="facebook-link" href="https://www.facebook.com/MidnightNoteofficial" target="_blank" rel="noreferrer"><Facebook /> facebook.com/MidnightNoteofficial</a>
           <div className="export-card">
             <div className="export-icon"><LibraryBig /></div>
-            <div><strong>Ready for Facebook</strong><span>৬ সেকেন্ড · 9:16 · HD</span></div>
+            <div><strong>Ready for Facebook</strong><span>{duration} সেকেন্ড · {activeFormat.detail}</span></div>
             <Button onClick={exportVideo} disabled={isExporting}><Download /> {isExporting ? "রেন্ডারিং" : "ভিডিও"}</Button>
           </div>
         </aside>
