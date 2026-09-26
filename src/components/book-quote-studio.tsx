@@ -400,7 +400,7 @@ export function BookQuoteStudio() {
         <aside className={cn("library-panel", mobilePanel !== "templates" && "mobile-hidden")}>
           <div className="panel-heading">
             <div><p className="eyebrow">TEMPLATE LIBRARY</p><h2>আবেগময় দৃশ্য</h2></div>
-            <span className="count-badge">২০</span>
+            <span className="count-badge">{bnNumber(scenes.length)}</span>
           </div>
           <label className="search-box">
             <Search />
