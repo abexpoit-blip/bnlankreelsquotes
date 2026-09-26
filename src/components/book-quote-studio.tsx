@@ -43,6 +43,7 @@ import sadRiverPier from "@/assets/sad-river-pier.jpg";
 import sadEmptyRoom from "@/assets/sad-empty-room.jpg";
 import { Button } from "@/components/ui/button";
 import { extraScenes } from "./scenes-extra";
+import { japanScenes } from "./scenes-japan";
 import { cn } from "@/lib/utils";
 
 type Template = {
@@ -85,7 +86,7 @@ const baseScenes: BaseScene[] = [
   { title: "বৃষ্টিভেজা ছাদ", category: "বৃষ্টি", image: rooftopRainBook, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
 ];
 
-const scenes: BaseScene[] = [...baseScenes, ...extraScenes];
+const scenes: BaseScene[] = [...baseScenes, ...extraScenes, ...japanScenes];
 
 const templates: Template[] = scenes.map((scene, index) => ({ ...scene, id: index + 1 }));
 
@@ -96,7 +97,9 @@ const fontOptions = [
   { id: "playfair", label: "Playfair Display", sample: "Aa Bb Cc", family: "'Playfair Display', serif" },
 ] as const;
 
-const filters = ["সব", "একাকিত্ব", "বৃষ্টি", "বিদায়", "স্মৃতি", "অপেক্ষা", "বিচ্ছেদ"];
+const filters = ["সব", "একাকিত্ব", "বৃষ্টি", "বিদায়", "স্মৃতি", "অপেক্ষা", "বিচ্ছেদ", "জাপান"];
+
+const bnNumber = (n: number) => String(n).replace(/\d/g, (d: string) => "০১২৩৪৫৬৭৮৯"[Number(d)] ?? "০");
 
 const durations = [6, 10, 15, 20, 30] as const;
 
@@ -399,7 +402,7 @@ export function BookQuoteStudio() {
         <aside className={cn("library-panel", mobilePanel !== "templates" && "mobile-hidden")}>
           <div className="panel-heading">
             <div><p className="eyebrow">TEMPLATE LIBRARY</p><h2>আবেগময় দৃশ্য</h2></div>
-            <span className="count-badge">২০</span>
+            <span className="count-badge">{bnNumber(scenes.length)}</span>
           </div>
           <label className="search-box">
             <Search />

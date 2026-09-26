@@ -11,3 +11,5 @@
 - [x] Add a ready-made Bangla and English quote library with a design selector for one-click placement.
 - [x] Add selectable quote-overlay treatments and compact highlighted Quote By/Voice By credits with a same-person shortcut.
 - [x] Expand the library to 120 fully unique photorealistic emotional templates with auto-fitted readable text placement.
+- [x] Add a new "জাপান" category with 100 unique Japan natural-scenery templates (220 total), auto-fitted readable text.
+- [x] Fix template-grid row overlap (grid-auto-rows: max-content) and show live template count badge.
