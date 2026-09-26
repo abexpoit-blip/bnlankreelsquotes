@@ -97,7 +97,7 @@ const fontOptions = [
   { id: "playfair", label: "Playfair Display", sample: "Aa Bb Cc", family: "'Playfair Display', serif" },
 ] as const;
 
-const filters = ["সব", "একাকিত্ব", "বৃষ্টি", "বিদায়", "স্মৃতি", "অপেক্ষা", "বিচ্ছেদ"];
+const filters = ["সব", "একাকিত্ব", "বৃষ্টি", "বিদায়", "স্মৃতি", "অপেক্ষা", "বিচ্ছেদ", "জাপান"];
 
 const durations = [6, 10, 15, 20, 30] as const;
 
