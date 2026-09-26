@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type CSSProperties } from "react";
+import { useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -138,6 +138,7 @@ export function BookQuoteStudio() {
   const [showVoiceBy, setShowVoiceBy] = useState(true);
   const [fontSize, setFontSize] = useState(16);
   const [textColor, setTextColor] = useState(templates[0]?.ink ?? "#fff4e8");
+  const [quotePosition, setQuotePosition] = useState({ x: templates[0]?.quoteLeft ?? 50, y: templates[0]?.quoteTop ?? 30 });
   const [align, setAlign] = useState<"left" | "center" | "right">("center");
   const [fontId, setFontId] = useState<(typeof fontOptions)[number]["id"]>("tiro");
   const [isPlaying, setIsPlaying] = useState(false);
@@ -146,6 +147,16 @@ export function BookQuoteStudio() {
   const [formatId, setFormatId] = useState<(typeof videoFormats)[number]["id"]>("reel-hd");
   const [mobilePanel, setMobilePanel] = useState<"templates" | "canvas" | "edit">("canvas");
   const imageRef = useRef<HTMLImageElement>(null);
+  const safeAreaRef = useRef<HTMLDivElement>(null);
+  const quoteRef = useRef<HTMLDivElement>(null);
+  const interactionRef = useRef<{
+    mode: "move" | "resize";
+    pointerId: number;
+    startX: number;
+    startY: number;
+    position: { x: number; y: number };
+    fontSize: number;
+  } | null>(null);
   const current = templates[selected] ?? templates[0];
   const activeFont = fontOptions.find((item) => item.id === fontId) ?? fontOptions[0];
   const activeFormat = videoFormats.find((item) => item.id === formatId) ?? videoFormats[0];
@@ -160,6 +171,48 @@ export function BookQuoteStudio() {
 
   if (!current) return null;
 
+  const beginInteraction = (event: ReactPointerEvent<HTMLElement>, mode: "move" | "resize") => {
+    event.preventDefault();
+    event.stopPropagation();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    interactionRef.current = {
+      mode,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      position: quotePosition,
+      fontSize,
+    };
+  };
+
+  const updateInteraction = (event: ReactPointerEvent<HTMLElement>) => {
+    const interaction = interactionRef.current;
+    const safeArea = safeAreaRef.current;
+    if (!interaction || interaction.pointerId !== event.pointerId || !safeArea) return;
+    event.preventDefault();
+    const bounds = safeArea.getBoundingClientRect();
+    const deltaX = event.clientX - interaction.startX;
+    const deltaY = event.clientY - interaction.startY;
+    if (interaction.mode === "resize") {
+      const delta = ((deltaX + deltaY) / 2 / bounds.width) * 52;
+      setFontSize(Math.round(Math.min(38, Math.max(12, interaction.fontSize + delta))));
+      return;
+    }
+    const quoteBounds = quoteRef.current?.getBoundingClientRect();
+    const halfWidth = quoteBounds ? (quoteBounds.width / bounds.width) * 50 : 10;
+    const halfHeight = quoteBounds ? (quoteBounds.height / bounds.height) * 50 : 6;
+    setQuotePosition({
+      x: Math.min(96 - halfWidth, Math.max(4 + halfWidth, interaction.position.x + (deltaX / bounds.width) * 100)),
+      y: Math.min(87 - halfHeight, Math.max(4 + halfHeight, interaction.position.y + (deltaY / bounds.height) * 100)),
+    });
+  };
+
+  const endInteraction = (event: ReactPointerEvent<HTMLElement>) => {
+    if (interactionRef.current?.pointerId !== event.pointerId) return;
+    interactionRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+
   const drawFrame = (context: CanvasRenderingContext2D, image: HTMLImageElement, progress = 0) => {
     const { width, height } = activeFormat;
     const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight) * (1 + progress * 0.035);
@@ -169,8 +222,8 @@ export function BookQuoteStudio() {
     context.fillStyle = "rgba(24, 18, 12, 0.06)";
     context.fillRect(0, 0, width, height);
     context.save();
-    const x = (current.quoteLeft / 100) * width;
-    const centerY = (current.quoteTop / 100) * height;
+    const x = (0.05 + (quotePosition.x / 100) * 0.9) * width;
+    const centerY = (0.05 + (quotePosition.y / 100) * 0.9) * height;
     context.translate(x, centerY);
     context.rotate((current.quoteRotate * Math.PI) / 180);
     context.textAlign = align;
@@ -307,6 +360,7 @@ export function BookQuoteStudio() {
                 onClick={() => {
                   setSelected(templates.findIndex((item) => item.id === template.id));
                   setTextColor(template.ink);
+                  setQuotePosition({ x: template.quoteLeft, y: template.quoteTop });
                   setMobilePanel("canvas");
                 }}
                 aria-label={`${template.title} বেছে নিন`}
@@ -329,24 +383,42 @@ export function BookQuoteStudio() {
           <div className={cn("reel-frame", current.tone, isPlaying && "is-playing")} style={{ aspectRatio: `${activeFormat.width} / ${activeFormat.height}` }}>
             <img ref={imageRef} src={current.image} alt={`${current.title} আবেগময় টেমপ্লেট`} width={768} height={1376} style={{ objectPosition: current.position }} />
             <div className="film-grain" />
-            <div className="safe-area">
+            <div ref={safeAreaRef} className="safe-area">
               <div
+                ref={quoteRef}
                 className={cn("printed-quote", `text-${current.textStyle}`)}
                 style={{
-                  top: `${current.quoteTop}%`,
+                  top: `${quotePosition.y}%`,
                   fontSize: `${fontSize}px`,
                   textAlign: align,
                   color: textColor,
                   width: `${current.quoteWidth}%`,
-                  left: `${current.quoteLeft}%`,
+                  left: `${quotePosition.x}%`,
                   transform: `translate(-50%, -50%) rotate(${current.quoteRotate}deg)`,
                   fontFamily: activeFont.family,
                 }}
+                onPointerDown={(event) => beginInteraction(event, "move")}
+                onPointerMove={updateInteraction}
+                onPointerUp={endInteraction}
+                onPointerCancel={endInteraction}
               >
                 <span className="quote-mark">“</span>
                 <p>{quote}</p>
                 {showQuoteBy && author.trim() && <span className="author-line" style={{ textAlign: align }}>Quote By — {author}</span>}
                 {showVoiceBy && voiceBy.trim() && <span className="author-line voice-line" style={{ textAlign: align }}>Voice By — {voiceBy}</span>}
+                <span
+                  className="resize-handle"
+                  role="slider"
+                  aria-label="লেখা বড় বা ছোট করুন"
+                  aria-valuemin={12}
+                  aria-valuemax={38}
+                  aria-valuenow={fontSize}
+                  tabIndex={0}
+                  onPointerDown={(event) => beginInteraction(event, "resize")}
+                  onPointerMove={updateInteraction}
+                  onPointerUp={endInteraction}
+                  onPointerCancel={endInteraction}
+                />
               </div>
               <a className="reel-brand" href="https://www.facebook.com/MidnightNoteofficial" target="_blank" rel="noreferrer" aria-label="মধ্যরাতের চিরকুট Facebook পেজ">
                 <span className="brand-mini">ম</span><span><strong>মধ্যরাতের চিরকুট • Design By Shovon</strong><small>facebook.com/MidnightNoteofficial</small></span>

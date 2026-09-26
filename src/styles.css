@@ -196,13 +196,15 @@
   .reel-frame.is-playing > img { animation: reel-breathe 6s ease-in-out infinite; }
   .film-grain { position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: repeating-linear-gradient(110deg, transparent 0 3px, color-mix(in oklab, var(--card) 7%, transparent) 4px); mix-blend-mode: soft-light; }
   .safe-area { position: absolute; inset: 5%; }
-  .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 25%, transparent); filter: saturate(.72) contrast(1.18); mix-blend-mode: multiply; }
+  .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 25%, transparent); filter: saturate(.72) contrast(1.18); mix-blend-mode: multiply; cursor: grab; touch-action: none; user-select: none; outline: 1px dashed color-mix(in oklab, currentColor 42%, transparent); outline-offset: 7px; }
+  .printed-quote:active { cursor: grabbing; }
   .printed-quote p { white-space: pre-wrap; }
   .printed-quote.text-light { padding: 13px 15px; border-left: 2px solid color-mix(in oklab, currentColor 62%, transparent); background: linear-gradient(90deg, color-mix(in oklab, var(--foreground) 58%, transparent), color-mix(in oklab, var(--foreground) 26%, transparent) 72%, transparent); text-shadow: 0 2px 12px color-mix(in oklab, var(--foreground) 92%, transparent); filter: none; mix-blend-mode: normal; }
   .printed-quote.text-bold { padding: 10px 12px; border-left: 3px solid currentColor; background: color-mix(in oklab, var(--card) 72%, transparent); text-shadow: none; filter: none; mix-blend-mode: normal; }
   .quote-mark { position: absolute; top: -18px; left: -2px; font-size: 30px; line-height: 1; opacity: .16; }
   .author-line { display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 700; opacity: .88; }
   .voice-line { margin-top: 2px; }
+  .resize-handle { position: absolute; right: -12px; bottom: -12px; width: 18px; height: 18px; border: 2px solid var(--primary-foreground); border-radius: 50%; background: var(--primary); box-shadow: 0 2px 7px color-mix(in oklab, var(--foreground) 45%, transparent); cursor: nwse-resize; touch-action: none; }
   .reel-brand { position: absolute; bottom: -5.3%; left: -5.3%; width: 110.6%; min-height: 6.9%; padding: 5px 7%; display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--primary-foreground); background: color-mix(in oklab, var(--foreground) 84%, transparent); font-size: 9px; text-decoration: none; text-shadow: 0 1px 4px color-mix(in oklab, var(--foreground) 86%, transparent); white-space: nowrap; }
   .reel-brand strong, .reel-brand small { display: block; line-height: 1.15; }
   .reel-brand strong { font-size: 9px; letter-spacing: .04em; }
