@@ -56,7 +56,7 @@ type Template = {
   textStyle: "ink" | "light" | "bold";
 };
 
-const scenes = [
+const scenes: Omit<Template, "id">[] = [
   { title: "বৃষ্টির জানালা", category: "বৃষ্টি", image: rainBook, position: "center", tone: "tone-cool", quoteTop: 62, quoteLeft: 70, quoteWidth: 34, quoteRotate: 1.2, ink: "#31251c", textStyle: "ink" },
   { title: "চাঁদের বই", category: "রাত", image: moonBook, position: "center", tone: "tone-midnight", quoteTop: 62, quoteLeft: 69, quoteWidth: 35, quoteRotate: 1.8, ink: "#34271e", textStyle: "ink" },
   { title: "নির্জন বিকেল", category: "একাকিত্ব", image: teaBook, position: "center", tone: "tone-olive", quoteTop: 63, quoteLeft: 68, quoteWidth: 34, quoteRotate: 1.5, ink: "#293226", textStyle: "ink" },
