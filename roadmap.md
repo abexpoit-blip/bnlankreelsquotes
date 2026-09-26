@@ -6,4 +6,4 @@
 - [x] Verify desktop and mobile presentation and core interactions.
 - [x] Add optional Quote By and Voice By credits, fixed Shovon branding, selectable duration, and social-video sizes.
 - [x] Keep one premium book scene and replace the other book scenes with distinct sad-moment templates with reliably clear text.
-- [x] Expand the emotional library to 100 presets, strengthen non-removable branding, and add optional Quote By/Voice By visibility controls.
+- [x] Keep only genuinely distinct emotional scenes, remove book imagery and in-canvas watermarking, retain footer branding, and add text color/size controls.

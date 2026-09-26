@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -20,9 +20,9 @@ import {
   Mic2,
 } from "lucide-react";
 
-import rainBook from "@/assets/book-rain-window.jpg";
 import loneManBook from "@/assets/book-lone-man-midnight.jpg";
 import rooftopRainBook from "@/assets/book-rooftop-rain.jpg";
+import sadBusStopNight from "@/assets/sad-bus-stop-night.jpg";
 import sadSeaSolitude from "@/assets/sad-sea-solitude.jpg";
 import sadRainWindow from "@/assets/sad-rain-window.jpg";
 import sadEmptyBench from "@/assets/sad-empty-bench.jpg";
@@ -56,13 +56,12 @@ type Template = {
   quoteLeft: number;
   quoteRotate: number;
   textStyle: "ink" | "light" | "bold";
-  treatment: "classic" | "cinema" | "editorial" | "close" | "poetry";
 };
 
-type BaseScene = Omit<Template, "id" | "treatment">;
+type BaseScene = Omit<Template, "id">;
 
 const scenes: BaseScene[] = [
-  { title: "বৃষ্টির বই", category: "বই", image: rainBook, position: "center", tone: "tone-cool", quoteTop: 62, quoteLeft: 70, quoteWidth: 34, quoteRotate: 1.2, ink: "#31251c", textStyle: "ink" },
+  { title: "শেষ বাসের অপেক্ষা", category: "অপেক্ষা", image: sadBusStopNight, position: "center", tone: "tone-midnight", quoteTop: 29, quoteLeft: 58, quoteWidth: 68, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
   { title: "সমুদ্রের একাকী", category: "একাকিত্ব", image: sadSeaSolitude, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#f7f2e8", textStyle: "light" },
   { title: "জানালার অপেক্ষা", category: "বৃষ্টি", image: sadRainWindow, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 43, quoteWidth: 68, quoteRotate: 0, ink: "#f7f2e8", textStyle: "light" },
   { title: "খালি বেঞ্চ", category: "বৃষ্টি", image: sadEmptyBench, position: "center", tone: "tone-amber", quoteTop: 38, quoteLeft: 60, quoteWidth: 66, quoteRotate: 0, ink: "#fff4df", textStyle: "light" },
@@ -84,25 +83,7 @@ const scenes: BaseScene[] = [
   { title: "বৃষ্টিভেজা ছাদ", category: "বৃষ্টি", image: rooftopRainBook, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
 ];
 
-const treatments = [
-  { id: "classic", label: "ক্লাসিক", top: 0, left: 0, width: 0 },
-  { id: "cinema", label: "সিনেমা", top: -5, left: 0, width: 4 },
-  { id: "editorial", label: "এডিটোরিয়াল", top: 7, left: -6, width: -5 },
-  { id: "close", label: "ক্লোজ", top: -2, left: 7, width: -7 },
-  { id: "poetry", label: "কবিতা", top: 11, left: 0, width: 2 },
-] as const;
-
-const templates: Template[] = scenes.flatMap((scene, sceneIndex) =>
-  treatments.map((treatment, treatmentIndex) => ({
-    ...scene,
-    id: sceneIndex * treatments.length + treatmentIndex + 1,
-    title: `${scene.title} · ${treatment.label}`,
-    quoteTop: Math.min(72, Math.max(20, scene.quoteTop + treatment.top)),
-    quoteLeft: Math.min(72, Math.max(28, scene.quoteLeft + treatment.left)),
-    quoteWidth: Math.min(80, Math.max(54, scene.quoteWidth + treatment.width)),
-    treatment: treatment.id,
-  })),
-);
+const templates: Template[] = scenes.map((scene, index) => ({ ...scene, id: index + 1 }));
 
 const fontOptions = [
   { id: "tiro", label: "Tiro Bangla", sample: "অ আ ক খ", family: "'Tiro Bangla', serif" },
@@ -111,7 +92,7 @@ const fontOptions = [
   { id: "playfair", label: "Playfair Display", sample: "Aa Bb Cc", family: "'Playfair Display', serif" },
 ] as const;
 
-const filters = ["সব", "বই", "একাকিত্ব", "বৃষ্টি", "বিদায়", "স্মৃতি", "অপেক্ষা", "বিচ্ছেদ"];
+const filters = ["সব", "একাকিত্ব", "বৃষ্টি", "বিদায়", "স্মৃতি", "অপেক্ষা", "বিচ্ছেদ"];
 
 const durations = [6, 10, 15, 20, 30] as const;
 
@@ -156,6 +137,7 @@ export function BookQuoteStudio() {
   const [showQuoteBy, setShowQuoteBy] = useState(true);
   const [showVoiceBy, setShowVoiceBy] = useState(true);
   const [fontSize, setFontSize] = useState(16);
+  const [textColor, setTextColor] = useState(templates[0]?.ink ?? "#fff4e8");
   const [align, setAlign] = useState<"left" | "center" | "right">("center");
   const [fontId, setFontId] = useState<(typeof fontOptions)[number]["id"]>("tiro");
   const [isPlaying, setIsPlaying] = useState(false);
@@ -193,7 +175,7 @@ export function BookQuoteStudio() {
     context.rotate((current.quoteRotate * Math.PI) / 180);
     context.textAlign = align;
     context.textBaseline = "middle";
-    context.fillStyle = current.ink;
+    context.fillStyle = textColor;
     const outputScale = width / 360;
     context.font = `600 ${fontSize * outputScale}px ${activeFont.family}`;
     const lines = wrapCanvasText(context, quote, (current.quoteWidth / 100) * width);
@@ -207,19 +189,10 @@ export function BookQuoteStudio() {
     lines.forEach((line, index) => context.fillText(line, textX, startY + index * lineHeight));
     context.shadowBlur = 0;
     context.font = `600 ${10.5 * outputScale}px 'Hind Siliguri', sans-serif`;
-    context.fillStyle = current.ink;
+    context.fillStyle = textColor;
     const creditStart = startY + lines.length * lineHeight + 10 * outputScale;
     if (showQuoteBy && author.trim()) context.fillText(`Quote By — ${author.trim()}`, textX, creditStart);
     if (showVoiceBy && voiceBy.trim()) context.fillText(`Voice By — ${voiceBy.trim()}`, textX, creditStart + (showQuoteBy && author.trim() ? 15 * outputScale : 0));
-    context.restore();
-    context.save();
-    context.translate(width / 2, height / 2);
-    context.rotate(-0.34);
-    context.globalAlpha = 0.11;
-    context.textAlign = "center";
-    context.font = `700 ${15 * outputScale}px 'Hind Siliguri', sans-serif`;
-    context.fillStyle = "rgba(255, 255, 255, 0.98)";
-    context.fillText("মধ্যরাতের চিরকুট  •  DESIGN BY SHOVON", 0, 0);
     context.restore();
     context.save();
     const footerHeight = 54 * outputScale;
@@ -285,7 +258,7 @@ export function BookQuoteStudio() {
           <div className="brand-seal"><BookOpen /></div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="truncate font-display text-base font-bold sm:text-lg">মধ্যরাতের চিরকুট</h1>
+              <h1 className="truncate font-display text-base font-bold sm:text-lg">— মধ্যরাতের চিরকুট</h1>
               <span className="pro-badge">PRO</span>
             </div>
             <p className="hidden text-[11px] text-muted-foreground sm:block">Premium Book Reel Studio</p>
@@ -313,8 +286,8 @@ export function BookQuoteStudio() {
       <main className="studio-grid">
         <aside className={cn("library-panel", mobilePanel !== "templates" && "mobile-hidden")}>
           <div className="panel-heading">
-            <div><p className="eyebrow">TEMPLATE LIBRARY</p><h2>প্রিমিয়াম বই</h2></div>
-            <span className="count-badge">১০০</span>
+            <div><p className="eyebrow">TEMPLATE LIBRARY</p><h2>আবেগময় দৃশ্য</h2></div>
+            <span className="count-badge">২০</span>
           </div>
           <label className="search-box">
             <Search />
@@ -333,6 +306,7 @@ export function BookQuoteStudio() {
                 className={cn("template-card", current.id === template.id && "is-selected")}
                 onClick={() => {
                   setSelected(templates.findIndex((item) => item.id === template.id));
+                  setTextColor(template.ink);
                   setMobilePanel("canvas");
                 }}
                 aria-label={`${template.title} বেছে নিন`}
@@ -352,8 +326,8 @@ export function BookQuoteStudio() {
             <div><span className="live-dot" /> লাইভ প্রিভিউ</div>
             <div className="flex items-center gap-2"><Sparkles /> HD Preview <ChevronDown /></div>
           </div>
-          <div className={cn("reel-frame", `treatment-${current.treatment}`, current.tone, isPlaying && "is-playing")} style={{ aspectRatio: `${activeFormat.width} / ${activeFormat.height}` }}>
-            <img ref={imageRef} src={current.image} alt={`${current.title} ওপেন বুক টেমপ্লেট`} width={768} height={1376} style={{ objectPosition: current.position }} />
+          <div className={cn("reel-frame", current.tone, isPlaying && "is-playing")} style={{ aspectRatio: `${activeFormat.width} / ${activeFormat.height}` }}>
+            <img ref={imageRef} src={current.image} alt={`${current.title} আবেগময় টেমপ্লেট`} width={768} height={1376} style={{ objectPosition: current.position }} />
             <div className="film-grain" />
             <div className="safe-area">
               <div
@@ -362,7 +336,7 @@ export function BookQuoteStudio() {
                   top: `${current.quoteTop}%`,
                   fontSize: `${fontSize}px`,
                   textAlign: align,
-                  color: current.ink,
+                  color: textColor,
                   width: `${current.quoteWidth}%`,
                   left: `${current.quoteLeft}%`,
                   transform: `translate(-50%, -50%) rotate(${current.quoteRotate}deg)`,
@@ -374,7 +348,6 @@ export function BookQuoteStudio() {
                 {showQuoteBy && author.trim() && <span className="author-line" style={{ textAlign: align }}>Quote By — {author}</span>}
                 {showVoiceBy && voiceBy.trim() && <span className="author-line voice-line" style={{ textAlign: align }}>Voice By — {voiceBy}</span>}
               </div>
-              <div className="brand-watermark">মধ্যরাতের চিরকুট <span>•</span> DESIGN BY SHOVON</div>
               <a className="reel-brand" href="https://www.facebook.com/MidnightNoteofficial" target="_blank" rel="noreferrer" aria-label="মধ্যরাতের চিরকুট Facebook পেজ">
                 <span className="brand-mini">ম</span><span><strong>মধ্যরাতের চিরকুট • Design By Shovon</strong><small>facebook.com/MidnightNoteofficial</small></span>
               </a>
@@ -412,7 +385,16 @@ export function BookQuoteStudio() {
           </div>
           <div className="control-section">
             <div className="control-label"><span>লেখার মাপ</span><strong>{fontSize}px</strong></div>
-            <input type="range" min="13" max="23" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
+            <input aria-label="লেখার মাপ" type="range" min="12" max="38" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
+          </div>
+          <div className="control-section">
+            <label className="control-label" htmlFor="textColor"><span>লেখার রঙ</span><strong>{textColor.toUpperCase()}</strong></label>
+            <div className="color-control">
+              <input id="textColor" type="color" value={textColor} onChange={(event) => setTextColor(event.target.value)} />
+              {["#fff4e8", "#f7f2e8", "#1f2523", "#f3c969", "#d8e9f0", "#f2b8b5"].map((color) => (
+                <Button key={color} type="button" variant="outline" size="icon" className="color-swatch" style={{ "--swatch-color": color } as CSSProperties} onClick={() => setTextColor(color)} aria-label={`${color} রঙ বেছে নিন`}><span /></Button>
+              ))}
+            </div>
           </div>
           <div className="control-section">
             <div className="control-label">সাজানো</div>
