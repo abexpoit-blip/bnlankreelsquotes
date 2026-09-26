@@ -196,10 +196,10 @@
   .reel-frame.is-playing > img { animation: reel-breathe 6s ease-in-out infinite; }
   .film-grain { position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: repeating-linear-gradient(110deg, transparent 0 3px, color-mix(in oklab, var(--card) 7%, transparent) 4px); mix-blend-mode: soft-light; }
   .safe-area { position: absolute; inset: 5%; }
-  .printed-quote { position: absolute; left: 13%; right: 13%; transform: translateY(-50%) rotate(-.3deg); color: oklch(0.23 0.02 60); font-family: var(--font-display); font-weight: 600; line-height: 1.55; text-wrap: balance; text-shadow: 0 1px 0 color-mix(in oklab, var(--card) 35%, transparent); filter: contrast(.94); }
+  .printed-quote { position: absolute; left: 50%; transform: translate(-50%, -50%) rotate(-.25deg); font-family: var(--font-display); font-weight: 600; line-height: 1.48; text-wrap: balance; text-shadow: 0 .4px 0 color-mix(in oklab, var(--card) 22%, transparent); filter: saturate(.78) contrast(1.08); mix-blend-mode: multiply; }
   .printed-quote p { white-space: pre-wrap; }
   .quote-mark { position: absolute; top: -29px; left: -5px; font-size: 45px; line-height: 1; opacity: .22; }
-  .author-line { display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 12px; font-weight: 600; opacity: .72; }
+  .author-line { display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 600; opacity: .78; }
   .reel-brand { position: absolute; bottom: 1.5%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; color: var(--primary-foreground); font-size: 9px; text-shadow: 0 1px 6px color-mix(in oklab, var(--foreground) 80%, transparent); white-space: nowrap; }
   .brand-mini { width: 19px; height: 19px; display: grid; place-items: center; border: 1px solid color-mix(in oklab, var(--primary-foreground) 55%, transparent); border-radius: 50%; font-family: var(--font-display); }
   .playback { width: min(100%, 480px); display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
@@ -255,7 +255,6 @@
   .template-grid { grid-template-columns: repeat(3, 1fr); }
   .studio-header h1 { font-size: 14px; }
   .reel-frame { width: min(100%, 348px); }
-  .printed-quote { left: 11%; right: 11%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
