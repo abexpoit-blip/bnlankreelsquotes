@@ -39,17 +39,19 @@ type Template = {
   quoteTop: number;
   ink: string;
   quoteWidth: number;
+  quoteLeft: number;
+  quoteRotate: number;
 };
 
 const scenes = [
-  { title: "বৃষ্টির জানালা", category: "বৃষ্টি", image: rainBook, position: "center", tone: "tone-cool", quoteTop: 62, ink: "#31251c", quoteWidth: 70 },
-  { title: "চাঁদের রাত", category: "রাত", image: moonBook, position: "center", tone: "tone-midnight", quoteTop: 63, ink: "#34271e", quoteWidth: 71 },
-  { title: "নির্জন বিকেল", category: "একাকিত্ব", image: teaBook, position: "center", tone: "tone-olive", quoteTop: 65, ink: "#293226", quoteWidth: 67 },
-  { title: "ফুলের সকাল", category: "ফুল", image: flowerBook, position: "center", tone: "tone-coral", quoteTop: 58, ink: "#49342d", quoteWidth: 63 },
-  { title: "পুরোনো চিঠি", category: "ভিনটেজ", image: autumnBook, position: "center", tone: "tone-amber", quoteTop: 59, ink: "#3d2919", quoteWidth: 70 },
-  { title: "সমুদ্র হাওয়া", category: "প্রকৃতি", image: seaBook, position: "center", tone: "tone-sea", quoteTop: 64, ink: "#26383b", quoteWidth: 68 },
-  { title: "বনের নীরবতা", category: "প্রকৃতি", image: forestBook, position: "center", tone: "tone-forest", quoteTop: 63, ink: "#283021", quoteWidth: 66 },
-  { title: "গোধূলির গোলাপ", category: "অনুভূতি", image: roseBook, position: "center", tone: "tone-rose", quoteTop: 61, ink: "#442522", quoteWidth: 68 },
+  { title: "বৃষ্টির জানালা", category: "বৃষ্টি", image: rainBook, position: "center", tone: "tone-cool", quoteTop: 62, quoteLeft: 70, quoteWidth: 34, quoteRotate: 1.2, ink: "#31251c" },
+  { title: "চাঁদের রাত", category: "রাত", image: moonBook, position: "center", tone: "tone-midnight", quoteTop: 62, quoteLeft: 69, quoteWidth: 35, quoteRotate: 1.8, ink: "#34271e" },
+  { title: "নির্জন বিকেল", category: "একাকিত্ব", image: teaBook, position: "center", tone: "tone-olive", quoteTop: 63, quoteLeft: 68, quoteWidth: 34, quoteRotate: 1.5, ink: "#293226" },
+  { title: "ফুলের সকাল", category: "ফুল", image: flowerBook, position: "center", tone: "tone-coral", quoteTop: 58, quoteLeft: 70, quoteWidth: 33, quoteRotate: 2.4, ink: "#49342d" },
+  { title: "পুরোনো চিঠি", category: "ভিনটেজ", image: autumnBook, position: "center", tone: "tone-amber", quoteTop: 66, quoteLeft: 69, quoteWidth: 34, quoteRotate: 1.8, ink: "#3d2919" },
+  { title: "সমুদ্র হাওয়া", category: "প্রকৃতি", image: seaBook, position: "center", tone: "tone-sea", quoteTop: 70, quoteLeft: 69, quoteWidth: 34, quoteRotate: 1.2, ink: "#26383b" },
+  { title: "বনের নীরবতা", category: "প্রকৃতি", image: forestBook, position: "center", tone: "tone-forest", quoteTop: 70, quoteLeft: 69, quoteWidth: 32, quoteRotate: 2.2, ink: "#283021" },
+  { title: "গোধূলির গোলাপ", category: "অনুভূতি", image: roseBook, position: "center", tone: "tone-rose", quoteTop: 61, quoteLeft: 70, quoteWidth: 34, quoteRotate: 1.1, ink: "#442522" },
 ];
 
 const modifiers = [
@@ -69,6 +71,8 @@ const templates: Template[] = scenes.flatMap((scene, sceneIndex) =>
     quoteTop: scene.quoteTop + modifier.topShift,
     ink: scene.ink,
     quoteWidth: scene.quoteWidth,
+    quoteLeft: scene.quoteLeft,
+    quoteRotate: scene.quoteRotate,
   })),
 );
 
@@ -104,7 +108,7 @@ export function BookQuoteStudio() {
   const [query, setQuery] = useState("");
   const [quote, setQuote] = useState("কিছু মানুষ দূরে গিয়েও থেকে যায়— পুরোনো বইয়ের পাতায় রাখা শুকনো ফুলের মতো।");
   const [author, setAuthor] = useState("মধ্যরাতের চিরকুট");
-  const [fontSize, setFontSize] = useState(20);
+  const [fontSize, setFontSize] = useState(16);
   const [align, setAlign] = useState<"left" | "center" | "right">("center");
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -131,17 +135,23 @@ export function BookQuoteStudio() {
     context.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
     context.fillStyle = "rgba(24, 18, 12, 0.06)";
     context.fillRect(0, 0, width, height);
+    context.save();
+    const x = (current.quoteLeft / 100) * width;
+    const centerY = (current.quoteTop / 100) * height;
+    context.translate(x, centerY);
+    context.rotate((current.quoteRotate * Math.PI) / 180);
     context.textAlign = align;
     context.textBaseline = "middle";
     context.fillStyle = current.ink;
-    context.font = `600 ${fontSize * 2}px 'Noto Serif Bengali', serif`;
-    const lines = wrapCanvasText(context, quote, current.quoteWidth * 7.2);
-    const x = align === "left" ? 115 : align === "right" ? 605 : 360;
-    const startY = (current.quoteTop / 100) * height - ((lines.length - 1) * fontSize * 1.45) / 2;
-    lines.forEach((line, index) => context.fillText(line, x, startY + index * fontSize * 2.9));
-    context.font = "500 24px 'Hind Siliguri', sans-serif";
+    context.font = `600 ${fontSize * 2}px 'Tiro Bangla', 'Noto Serif Bengali', serif`;
+    const lines = wrapCanvasText(context, quote, (current.quoteWidth / 100) * width);
+    const textX = align === "left" ? -(current.quoteWidth / 200) * width : align === "right" ? (current.quoteWidth / 200) * width : 0;
+    const startY = -((lines.length - 1) * fontSize * 1.35) / 2;
+    lines.forEach((line, index) => context.fillText(line, textX, startY + index * fontSize * 2.7));
+    context.font = "500 21px 'Hind Siliguri', sans-serif";
     context.fillStyle = "rgba(41, 36, 31, 0.78)";
-    context.fillText(`— ${author}`, x, startY + lines.length * fontSize * 2.9 + 24);
+    context.fillText(`— ${author}`, textX, startY + lines.length * fontSize * 2.7 + 20);
+    context.restore();
   };
 
   const exportImage = () => {
@@ -274,6 +284,8 @@ export function BookQuoteStudio() {
                   textAlign: align,
                   color: current.ink,
                   width: `${current.quoteWidth}%`,
+                  left: `${current.quoteLeft}%`,
+                  transform: `translate(-50%, -50%) rotate(${current.quoteRotate}deg)`,
                 }}
               >
                 <span className="quote-mark">“</span>
@@ -309,7 +321,7 @@ export function BookQuoteStudio() {
           </div>
           <div className="control-section">
             <div className="control-label"><span>লেখার মাপ</span><strong>{fontSize}px</strong></div>
-            <input type="range" min="16" max="28" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
+            <input type="range" min="13" max="23" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
           </div>
           <div className="control-section">
             <div className="control-label">সাজানো</div>
@@ -321,7 +333,7 @@ export function BookQuoteStudio() {
           </div>
           <div className="control-section font-preview">
             <div className="control-label">বাংলা ফন্ট</div>
-            <div className="font-option is-active"><span className="font-book">অ আ ক খ</span><span>Noto Serif Bengali</span><Check /></div>
+             <div className="font-option is-active"><span className="font-book">অ আ ক খ</span><span>Tiro Bangla Book</span><Check /></div>
             <div className="font-option"><span className="font-clean">অ আ ক খ</span><span>Hind Siliguri</span></div>
           </div>
           <div className="export-card">

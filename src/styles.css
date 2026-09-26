@@ -20,7 +20,7 @@
 
 @theme inline {
   --font-sans: "Hind Siliguri", sans-serif;
-  --font-display: "Noto Serif Bengali", serif;
+  --font-display: "Tiro Bangla", "Noto Serif Bengali", serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -196,9 +196,9 @@
   .reel-frame.is-playing > img { animation: reel-breathe 6s ease-in-out infinite; }
   .film-grain { position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: repeating-linear-gradient(110deg, transparent 0 3px, color-mix(in oklab, var(--card) 7%, transparent) 4px); mix-blend-mode: soft-light; }
   .safe-area { position: absolute; inset: 5%; }
-  .printed-quote { position: absolute; left: 50%; transform: translate(-50%, -50%) rotate(-.25deg); font-family: var(--font-display); font-weight: 600; line-height: 1.48; text-wrap: balance; text-shadow: 0 .4px 0 color-mix(in oklab, var(--card) 22%, transparent); filter: saturate(.78) contrast(1.08); mix-blend-mode: multiply; }
+  .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 16%, transparent); filter: saturate(.72) contrast(1.12); mix-blend-mode: multiply; }
   .printed-quote p { white-space: pre-wrap; }
-  .quote-mark { position: absolute; top: -29px; left: -5px; font-size: 45px; line-height: 1; opacity: .22; }
+  .quote-mark { position: absolute; top: -18px; left: -2px; font-size: 30px; line-height: 1; opacity: .16; }
   .author-line { display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 600; opacity: .78; }
   .reel-brand { position: absolute; bottom: 1.5%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; color: var(--primary-foreground); font-size: 9px; text-shadow: 0 1px 6px color-mix(in oklab, var(--foreground) 80%, transparent); white-space: nowrap; }
   .brand-mini { width: 19px; height: 19px; display: grid; place-items: center; border: 1px solid color-mix(in oklab, var(--primary-foreground) 55%, transparent); border-radius: 50%; font-family: var(--font-display); }
