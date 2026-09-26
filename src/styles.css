@@ -193,6 +193,10 @@
   .canvas-toolbar svg { width: 13px; }
   .reel-frame { width: min(100%, 414px); aspect-ratio: 9/16; overflow: hidden; position: relative; border-radius: 8px; background: var(--foreground); box-shadow: 0 32px 70px color-mix(in oklab, var(--foreground) 28%, transparent), 0 0 0 1px color-mix(in oklab, var(--foreground) 22%, transparent); }
   .reel-frame > img { width: 100%; height: 100%; object-fit: cover; transform-origin: center; }
+  .reel-frame.treatment-cinema > img { filter: saturate(.72) contrast(1.08); }
+  .reel-frame.treatment-editorial > img { filter: saturate(.84) brightness(.92); }
+  .reel-frame.treatment-close > img { transform: scale(1.08); }
+  .reel-frame.treatment-poetry > img { filter: sepia(.1) saturate(.76) contrast(1.05); }
   .reel-frame.is-playing > img { animation: reel-breathe 6s ease-in-out infinite; }
   .film-grain { position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: repeating-linear-gradient(110deg, transparent 0 3px, color-mix(in oklab, var(--card) 7%, transparent) 4px); mix-blend-mode: soft-light; }
   .safe-area { position: absolute; inset: 5%; }
@@ -203,7 +207,9 @@
   .quote-mark { position: absolute; top: -18px; left: -2px; font-size: 30px; line-height: 1; opacity: .16; }
   .author-line { display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 700; opacity: .88; }
   .voice-line { margin-top: 2px; }
-  .reel-brand { position: absolute; bottom: .5%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; color: var(--primary-foreground); font-size: 9px; text-decoration: none; text-shadow: 0 1px 7px color-mix(in oklab, var(--foreground) 90%, transparent); white-space: nowrap; }
+  .brand-watermark { position: absolute; left: 50%; top: 50%; width: 86%; transform: translate(-50%, -50%) rotate(-20deg); color: color-mix(in oklab, var(--primary-foreground) 23%, transparent); font-family: var(--font-sans); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-align: center; text-shadow: 0 1px 3px color-mix(in oklab, var(--foreground) 24%, transparent); pointer-events: none; white-space: nowrap; }
+  .brand-watermark span { margin-inline: 6px; color: var(--accent); }
+  .reel-brand { position: absolute; bottom: -5.3%; left: -5.3%; width: 110.6%; min-height: 6.9%; padding: 5px 7%; display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--primary-foreground); background: color-mix(in oklab, var(--foreground) 84%, transparent); font-size: 9px; text-decoration: none; text-shadow: 0 1px 4px color-mix(in oklab, var(--foreground) 86%, transparent); white-space: nowrap; }
   .reel-brand strong, .reel-brand small { display: block; line-height: 1.15; }
   .reel-brand strong { font-size: 9px; letter-spacing: .04em; }
   .reel-brand small { font-size: 7px; opacity: .84; }
@@ -223,6 +229,8 @@
   .control-section textarea { min-height: 92px; resize: vertical; font-family: var(--font-display); line-height: 1.6; }
   .control-section input:focus, .control-section textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 12%, transparent); }
   .control-section input[type="range"] { width: 100%; accent-color: var(--primary); }
+  .visibility-toggle { display: flex; align-items: center; gap: 7px; margin-top: 8px; color: var(--muted-foreground); font-size: 10px; font-weight: 600; cursor: pointer; }
+  .visibility-toggle input { width: 15px; height: 15px; accent-color: var(--primary); }
   .segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
   .segmented button { width: 100%; }
   .font-option { width: 100%; height: auto; display: grid; grid-template-columns: 72px 1fr 16px; align-items: center; justify-items: start; gap: 9px; border: 1px solid var(--border); border-radius: 6px; padding: 8px; margin-top: 6px; font-size: 10px; color: var(--muted-foreground); white-space: normal; }
