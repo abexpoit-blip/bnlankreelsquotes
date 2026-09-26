@@ -198,6 +198,8 @@
   .safe-area { position: absolute; inset: 5%; }
   .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 16%, transparent); filter: saturate(.72) contrast(1.12); mix-blend-mode: multiply; }
   .printed-quote p { white-space: pre-wrap; }
+  .printed-quote.text-light { text-shadow: 0 2px 12px color-mix(in oklab, var(--foreground) 86%, transparent); filter: none; mix-blend-mode: normal; }
+  .printed-quote.text-bold { padding: 10px 12px; border-left: 3px solid currentColor; background: color-mix(in oklab, var(--card) 72%, transparent); text-shadow: none; filter: none; mix-blend-mode: normal; }
   .quote-mark { position: absolute; top: -18px; left: -2px; font-size: 30px; line-height: 1; opacity: .16; }
   .author-line { display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 600; opacity: .78; }
   .reel-brand { position: absolute; bottom: 1.5%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; color: var(--primary-foreground); font-size: 9px; text-shadow: 0 1px 6px color-mix(in oklab, var(--foreground) 80%, transparent); white-space: nowrap; }
@@ -218,7 +220,8 @@
   .control-section input[type="range"] { width: 100%; accent-color: var(--primary); }
   .segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
   .segmented button { width: 100%; }
-  .font-option { display: grid; grid-template-columns: 62px 1fr 16px; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 6px; padding: 8px; margin-top: 6px; font-size: 10px; color: var(--muted-foreground); }
+  .font-option { width: 100%; height: auto; display: grid; grid-template-columns: 72px 1fr 16px; align-items: center; justify-items: start; gap: 9px; border: 1px solid var(--border); border-radius: 6px; padding: 8px; margin-top: 6px; font-size: 10px; color: var(--muted-foreground); white-space: normal; }
+  .font-option > span:first-child { font-size: 16px; color: var(--foreground); }
   .font-option.is-active { border-color: var(--primary); background: color-mix(in oklab, var(--primary) 6%, var(--card)); }
   .font-option > svg { width: 13px; color: var(--primary); }
   .font-book { font-family: var(--font-display); font-size: 15px; color: var(--foreground); }
