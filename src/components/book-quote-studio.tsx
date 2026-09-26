@@ -42,6 +42,7 @@ import sadLastRose from "@/assets/sad-last-rose.jpg";
 import sadRiverPier from "@/assets/sad-river-pier.jpg";
 import sadEmptyRoom from "@/assets/sad-empty-room.jpg";
 import { Button } from "@/components/ui/button";
+import { extraScenes } from "./scenes-extra";
 import { cn } from "@/lib/utils";
 
 type Template = {
@@ -61,7 +62,7 @@ type Template = {
 
 type BaseScene = Omit<Template, "id">;
 
-const scenes: BaseScene[] = [
+const baseScenes: BaseScene[] = [
   { title: "শেষ বাসের অপেক্ষা", category: "অপেক্ষা", image: sadBusStopNight, position: "center", tone: "tone-midnight", quoteTop: 29, quoteLeft: 58, quoteWidth: 68, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
   { title: "সমুদ্রের একাকী", category: "একাকিত্ব", image: sadSeaSolitude, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#f7f2e8", textStyle: "light" },
   { title: "জানালার অপেক্ষা", category: "বৃষ্টি", image: sadRainWindow, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 43, quoteWidth: 68, quoteRotate: 0, ink: "#f7f2e8", textStyle: "light" },
@@ -83,6 +84,8 @@ const scenes: BaseScene[] = [
   { title: "নিঃসঙ্গ রাত", category: "একাকিত্ব", image: loneManBook, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#f8f1e7", textStyle: "light" },
   { title: "বৃষ্টিভেজা ছাদ", category: "বৃষ্টি", image: rooftopRainBook, position: "center", tone: "tone-midnight", quoteTop: 27, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
 ];
+
+const scenes: BaseScene[] = [...baseScenes, ...extraScenes];
 
 const templates: Template[] = scenes.map((scene, index) => ({ ...scene, id: index + 1 }));
 
