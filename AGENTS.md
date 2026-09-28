@@ -14,3 +14,4 @@
 - Store quote placement as safe-area percentages so direct manipulation and every export format remain aligned.
 - Store quote-block width as a safe-area percentage and use the same auto-fitted font size in preview and exports so long quotes stay aligned.
 - Keep template motion selectable and deterministic from normalized progress so the CSS preview and canvas video export use matching movement.
+- Keep uploaded-video processing entirely client-side and export MP4 only when the browser reports native MP4 MediaRecorder support, so private media is never uploaded or mislabeled.
