@@ -474,9 +474,10 @@ export function BookQuoteStudio() {
     context.font = `italic 700 ${18 * outputScale}px 'Tiro Bangla', serif`;
     context.fillStyle = "rgba(245, 216, 147, 1)";
     context.fillText("Shovon", 42 * outputScale, height - 23 * outputScale);
+    const signatureWidth = context.measureText("Shovon").width;
     context.font = `500 ${8.5 * outputScale}px 'Hind Siliguri', sans-serif`;
     context.fillStyle = "rgba(255, 255, 255, 0.76)";
-    context.fillText("DESIGN BY", 92 * outputScale, height - 25 * outputScale);
+    context.fillText("DESIGN BY", 42 * outputScale + signatureWidth + 9 * outputScale, height - 25 * outputScale);
     context.textAlign = "right";
     context.font = `600 ${9 * outputScale}px 'Hind Siliguri', sans-serif`;
     context.fillStyle = "rgba(255, 255, 255, 0.9)";
