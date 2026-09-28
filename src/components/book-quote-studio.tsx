@@ -249,6 +249,9 @@ export function BookQuoteStudio() {
     [quoteLibraryFilter],
   );
 
+  useEffect(() => {
+    document.fonts?.load("22px 'Great Vibes'").catch(() => {});
+  }, []);
   useEffect(() => () => {
     if (uploadedVideo) URL.revokeObjectURL(uploadedVideo.url);
   }, [uploadedVideo]);
