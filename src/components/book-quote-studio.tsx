@@ -504,7 +504,7 @@ export function BookQuoteStudio() {
                   fontFamily: activeFont.family,
                   "--quote-bg-opacity": `${quoteBackgroundOpacity}%`,
                   "--quote-text-shadow": textShadowColor,
-                }}
+                } as CSSProperties}
                 onPointerDown={(event) => beginInteraction(event, "move")}
                 onPointerMove={updateInteraction}
                 onPointerUp={endInteraction}
@@ -522,7 +522,7 @@ export function BookQuoteStudio() {
                   className="resize-handle"
                   role="slider"
                   aria-label="লেখা বড় বা ছোট করুন"
-                  aria-valuemin={12}
+                  aria-valuemin={10}
                   aria-valuemax={64}
                   aria-valuenow={fontSize}
                   tabIndex={0}
