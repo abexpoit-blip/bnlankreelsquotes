@@ -374,7 +374,10 @@ export function BookQuoteStudio() {
     const isCombinedCredit = sameCreditPerson && hasQuoteCredit && hasVoiceCredit;
     const creditCount = Number(hasQuoteCredit) + Number(hasVoiceCredit && !isCombinedCredit);
     const panelTop = startY - 25 * outputScale;
-    const panelBottom = startY + Math.max(lines.length - 1, 0) * lineHeight + (creditCount ? 76 + Math.max(creditCount - 1, 0) * 34 : 24) * outputScale;
+    const creditRowHeight = 24 * outputScale;
+    const creditGap = 9 * outputScale;
+    const creditsBlockHeight = creditCount ? creditCount * creditRowHeight + (creditCount - 1) * creditGap : 0;
+    const panelBottom = startY + Math.max(lines.length - 1, 0) * lineHeight + (creditCount ? 16 + creditsBlockHeight + 8 : 24) * outputScale;
     const panelOpacity = quoteBackgroundOpacity / 100;
     if (quoteStyleId === "glass") {
       context.fillStyle = `rgba(10, 17, 20, ${panelOpacity})`;
