@@ -411,15 +411,33 @@ export function BookQuoteStudio() {
     if (showVoiceBy && displayedVoiceBy.trim()) context.fillText(`Voice By — ${displayedVoiceBy.trim()}`, textX, creditStart + (showQuoteBy && author.trim() ? 15 * outputScale : 0));
     context.restore();
     context.save();
-    const footerHeight = 72 * outputScale;
-    context.fillStyle = "rgba(12, 17, 16, 0.82)";
-    context.fillRect(0, height - footerHeight, width, footerHeight);
-    context.textAlign = "center";
-    context.font = `700 ${15 * outputScale}px 'Hind Siliguri', sans-serif`;
-    context.fillStyle = "rgba(255, 255, 255, 0.96)";
-    context.fillText("মধ্যরাতের চিরকুট  •  Design By Shovon", width / 2, height - 43 * outputScale);
-    context.font = `600 ${10 * outputScale}px 'Hind Siliguri', sans-serif`;
-    context.fillText("facebook.com/MidnightNoteofficial", width / 2, height - 20 * outputScale);
+    const footerHeight = 82 * outputScale;
+    const footerTop = height - footerHeight;
+    const footerGradient = context.createLinearGradient(0, footerTop, 0, height);
+    footerGradient.addColorStop(0, "rgba(7, 12, 12, 0.74)");
+    footerGradient.addColorStop(1, "rgba(7, 12, 12, 0.94)");
+    context.fillStyle = footerGradient;
+    context.fillRect(0, footerTop, width, footerHeight);
+    const accentGradient = context.createLinearGradient(width * 0.08, 0, width * 0.92, 0);
+    accentGradient.addColorStop(0, "rgba(226, 183, 92, 0)");
+    accentGradient.addColorStop(0.5, "rgba(245, 216, 147, 0.92)");
+    accentGradient.addColorStop(1, "rgba(226, 183, 92, 0)");
+    context.fillStyle = accentGradient;
+    context.fillRect(width * 0.08, footerTop, width * 0.84, outputScale);
+    context.textAlign = "left";
+    context.font = `700 ${14 * outputScale}px 'Hind Siliguri', sans-serif`;
+    context.fillStyle = "rgba(255, 255, 255, 0.98)";
+    context.fillText("মধ্যরাতের চিরকুট", 42 * outputScale, height - 48 * outputScale);
+    context.font = `italic 700 ${18 * outputScale}px 'Tiro Bangla', serif`;
+    context.fillStyle = "rgba(245, 216, 147, 1)";
+    context.fillText("Shovon", 42 * outputScale, height - 23 * outputScale);
+    context.font = `500 ${8.5 * outputScale}px 'Hind Siliguri', sans-serif`;
+    context.fillStyle = "rgba(255, 255, 255, 0.76)";
+    context.fillText("DESIGN BY", 92 * outputScale, height - 25 * outputScale);
+    context.textAlign = "right";
+    context.font = `600 ${9 * outputScale}px 'Hind Siliguri', sans-serif`;
+    context.fillStyle = "rgba(255, 255, 255, 0.9)";
+    context.fillText("facebook.com/MidnightNoteofficial", width - 42 * outputScale, height - 32 * outputScale);
     context.restore();
   };
 
@@ -659,7 +677,12 @@ export function BookQuoteStudio() {
                 />
               </div>
               <a className="reel-brand" href="https://www.facebook.com/MidnightNoteofficial" target="_blank" rel="noreferrer" aria-label="মধ্যরাতের চিরকুট Facebook পেজ">
-                <span className="brand-mini">ম</span><span><strong>মধ্যরাতের চিরকুট • Design By Shovon</strong><small>facebook.com/MidnightNoteofficial</small></span>
+                <span className="brand-identity">
+                  <strong>মধ্যরাতের চিরকুট</strong>
+                  <span className="brand-signature"><em>Shovon</em><small>Design By</small></span>
+                </span>
+                <span className="brand-divider" aria-hidden="true" />
+                <span className="brand-social"><span className="brand-facebook"><Facebook /></span><small>facebook.com/MidnightNoteofficial</small></span>
               </a>
             </div>
           </div>
