@@ -13,3 +13,4 @@
 - Keep export settings client-side and format-driven so preview, image output, and video output always share the selected dimensions and duration.
 - Store quote placement as safe-area percentages so direct manipulation and every export format remain aligned.
 - Store quote-block width as a safe-area percentage and use the same auto-fitted font size in preview and exports so long quotes stay aligned.
+- Keep template motion selectable and deterministic from normalized progress so the CSS preview and canvas video export use matching movement.

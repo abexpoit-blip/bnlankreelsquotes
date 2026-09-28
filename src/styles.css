@@ -147,10 +147,9 @@
   }
 }
 
-@keyframes reel-breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.018); }
-}
+@keyframes reel-zoom { from { transform: scale(1); } to { transform: scale(1.07); } }
+@keyframes reel-pan { from { transform: scale(1.08) translateX(-3.25%); } to { transform: scale(1.08) translateX(3.25%); } }
+@keyframes reel-drift { from { transform: scale(1.08) translateY(3.25%); } to { transform: scale(1.08) translateY(-3.25%); } }
 
 @keyframes timeline-progress {
   from { width: 0; }
@@ -193,7 +192,10 @@
   .canvas-toolbar svg { width: 13px; }
   .reel-frame { width: min(100%, 414px); aspect-ratio: 9/16; overflow: hidden; position: relative; border-radius: 8px; background: var(--foreground); box-shadow: 0 32px 70px color-mix(in oklab, var(--foreground) 28%, transparent), 0 0 0 1px color-mix(in oklab, var(--foreground) 22%, transparent); }
   .reel-frame > img { width: 100%; height: 100%; object-fit: cover; transform-origin: center; }
-  .reel-frame.is-playing > img { animation: reel-breathe 6s ease-in-out infinite; }
+  .reel-frame.is-playing > img.motion-zoom { animation: reel-zoom var(--motion-duration) ease-in-out infinite alternate; }
+  .reel-frame.is-playing > img.motion-pan { animation: reel-pan var(--motion-duration) ease-in-out infinite alternate; }
+  .reel-frame.is-playing > img.motion-drift { animation: reel-drift var(--motion-duration) ease-in-out infinite alternate; }
+  .reel-frame.is-playing > img.motion-still { animation: none; }
   .film-grain { position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: repeating-linear-gradient(110deg, transparent 0 3px, color-mix(in oklab, var(--card) 7%, transparent) 4px); mix-blend-mode: soft-light; }
   .safe-area { position: absolute; inset: 5%; }
   .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 25%, transparent); filter: saturate(.72) contrast(1.18); mix-blend-mode: multiply; cursor: grab; touch-action: none; user-select: none; outline: 1px dashed color-mix(in oklab, currentColor 42%, transparent); outline-offset: 7px; }
@@ -223,7 +225,7 @@
   .timecode { font: 500 9px monospace; color: var(--muted-foreground); }
   .timeline { flex: 1; height: 4px; border-radius: 99px; background: var(--muted); overflow: hidden; }
   .timeline > span { display: block; height: 100%; width: 0; background: var(--accent); }
-  .timeline > .timeline-running { animation: timeline-progress 6s linear infinite; }
+  .timeline > .timeline-running { animation: timeline-progress var(--motion-duration, 6s) linear infinite; }
   .editor-panel { overflow-y: auto; }
   .control-section { padding: 14px 0; border-top: 1px solid var(--border); }
   .control-label { display: flex; align-items: center; justify-content: space-between; color: var(--muted-foreground); font-size: 11px; font-weight: 600; margin-bottom: 7px; }
