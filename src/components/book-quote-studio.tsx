@@ -527,7 +527,7 @@ export function BookQuoteStudio() {
               </a>
             </div>
           </div>
-          <div className="playback">
+          <div className="playback" style={{ "--motion-duration": `${duration}s` } as CSSProperties}>
             <Button size="icon" onClick={() => setIsPlaying((value) => !value)} aria-label={isPlaying ? "বিরতি" : "চালু করুন"}>
               {isPlaying ? <Pause /> : <Play />}
             </Button>
