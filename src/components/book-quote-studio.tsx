@@ -249,6 +249,9 @@ export function BookQuoteStudio() {
     [quoteLibraryFilter],
   );
 
+  useEffect(() => {
+    document.fonts?.load("22px 'Great Vibes'").catch(() => {});
+  }, []);
   useEffect(() => () => {
     if (uploadedVideo) URL.revokeObjectURL(uploadedVideo.url);
   }, [uploadedVideo]);
@@ -374,7 +377,10 @@ export function BookQuoteStudio() {
     const isCombinedCredit = sameCreditPerson && hasQuoteCredit && hasVoiceCredit;
     const creditCount = Number(hasQuoteCredit) + Number(hasVoiceCredit && !isCombinedCredit);
     const panelTop = startY - 25 * outputScale;
-    const panelBottom = startY + Math.max(lines.length - 1, 0) * lineHeight + (creditCount ? 76 + Math.max(creditCount - 1, 0) * 34 : 24) * outputScale;
+    const creditRowHeight = 24 * outputScale;
+    const creditGap = 9 * outputScale;
+    const creditsBlockHeight = creditCount ? creditCount * creditRowHeight + (creditCount - 1) * creditGap : 0;
+    const panelBottom = startY + Math.max(lines.length - 1, 0) * lineHeight + (creditCount ? 16 + creditsBlockHeight + 8 : 24) * outputScale;
     const panelOpacity = quoteBackgroundOpacity / 100;
     if (quoteStyleId === "glass") {
       context.fillStyle = `rgba(10, 17, 20, ${panelOpacity})`;
@@ -413,40 +419,37 @@ export function BookQuoteStudio() {
           ...(hasQuoteCredit ? [{ label: "QUOTE BY", name: author.trim() }] : []),
           ...(hasVoiceCredit ? [{ label: "VOICE BY", name: displayedVoiceBy.trim() }] : []),
         ];
-    const badgeWidth = Math.min((quoteWidth / 100) * width, 210 * outputScale);
-    const badgeHeight = 29 * outputScale;
-    const badgeLeft = align === "left" ? textX : align === "right" ? textX - badgeWidth : -badgeWidth / 2;
-    const creditStart = startY + lines.length * lineHeight + 12 * outputScale;
+    const creditStart = startY + lines.length * lineHeight + 16 * outputScale;
+    const maxCreditWidth = (quoteWidth / 100) * width;
     credits.forEach((credit, index) => {
-      const badgeTop = creditStart + index * 34 * outputScale;
-      const badgeGradient = context.createLinearGradient(badgeLeft, 0, badgeLeft + badgeWidth, 0);
-      badgeGradient.addColorStop(0, "rgba(10, 18, 20, 0.9)");
-      badgeGradient.addColorStop(0.52, "rgba(25, 31, 29, 0.94)");
-      badgeGradient.addColorStop(1, "rgba(10, 18, 20, 0.9)");
-      context.fillStyle = badgeGradient;
-      context.strokeStyle = "rgba(244, 208, 124, 0.5)";
-      context.lineWidth = 0.8 * outputScale;
-      context.beginPath();
-      context.roundRect(badgeLeft, badgeTop, badgeWidth, badgeHeight, badgeHeight / 2);
-      context.fill();
-      context.stroke();
-      const dividerX = badgeLeft + 78 * outputScale;
-      context.fillStyle = "rgba(244, 208, 124, 0.32)";
-      context.fillRect(dividerX, badgeTop + 7 * outputScale, 0.7 * outputScale, badgeHeight - 14 * outputScale);
+      const rowCenterY = creditStart + index * (creditRowHeight + creditGap) + creditRowHeight / 2;
       context.textBaseline = "middle";
-      context.textAlign = "center";
+      context.textAlign = "left";
       context.shadowBlur = 0;
-      context.font = `700 ${6.3 * outputScale}px 'Hind Siliguri', sans-serif`;
-      context.fillStyle = "rgba(255, 246, 220, 0.72)";
-      context.fillText(credit.label, badgeLeft + 39 * outputScale, badgeTop + badgeHeight / 2);
-      context.font = `700 ${13.5 * outputScale}px 'Tiro Bangla', 'Hind Siliguri', serif`;
+      context.font = `600 ${6.5 * outputScale}px 'Hind Siliguri', sans-serif`;
+      const labelWidth = context.measureText(credit.label).width;
+      const nameFont = `${22 * outputScale}px 'Great Vibes', 'Tiro Bangla', serif`;
+      context.font = nameFont;
+      let displayName = credit.name;
+      const maxNameWidth = Math.max(maxCreditWidth - labelWidth - 20 * outputScale, 40 * outputScale);
+      while (displayName.length > 1 && context.measureText(displayName).width > maxNameWidth) displayName = `${displayName.slice(0, -2).trim()}…`;
+      const nameWidth = context.measureText(displayName).width;
+      const dividerGap = 7 * outputScale;
+      const dividerWidth = outputScale;
+      const rowWidth = labelWidth + dividerGap + dividerWidth + dividerGap + nameWidth;
+      let cursor = align === "left" ? textX : align === "right" ? textX - rowWidth : -rowWidth / 2;
+      context.font = `600 ${6.5 * outputScale}px 'Hind Siliguri', sans-serif`;
+      context.fillStyle = "rgba(255, 250, 235, 0.68)";
+      context.fillText(credit.label, cursor, rowCenterY - 1 * outputScale);
+      cursor += labelWidth + dividerGap;
+      context.fillStyle = "rgba(255, 255, 255, 0.26)";
+      context.fillRect(cursor, rowCenterY - 6 * outputScale, dividerWidth, 12 * outputScale);
+      cursor += dividerWidth + dividerGap;
+      context.font = nameFont;
       context.fillStyle = "rgba(247, 211, 126, 1)";
       context.shadowColor = "rgba(0, 0, 0, 0.85)";
-      context.shadowBlur = 5 * outputScale;
-      const availableNameWidth = badgeWidth - 91 * outputScale;
-      let displayName = credit.name;
-      while (displayName.length > 1 && context.measureText(displayName).width > availableNameWidth) displayName = `${displayName.slice(0, -2).trim()}…`;
-      context.fillText(displayName, dividerX + availableNameWidth / 2 + 6 * outputScale, badgeTop + badgeHeight / 2 + 0.5 * outputScale);
+      context.shadowBlur = 6 * outputScale;
+      context.fillText(displayName, cursor, rowCenterY + 1 * outputScale);
       context.shadowBlur = 0;
     });
     context.restore();
@@ -471,9 +474,10 @@ export function BookQuoteStudio() {
     context.font = `italic 700 ${18 * outputScale}px 'Tiro Bangla', serif`;
     context.fillStyle = "rgba(245, 216, 147, 1)";
     context.fillText("Shovon", 42 * outputScale, height - 23 * outputScale);
+    const signatureWidth = context.measureText("Shovon").width;
     context.font = `500 ${8.5 * outputScale}px 'Hind Siliguri', sans-serif`;
     context.fillStyle = "rgba(255, 255, 255, 0.76)";
-    context.fillText("DESIGN BY", 92 * outputScale, height - 25 * outputScale);
+    context.fillText("DESIGN BY", 42 * outputScale + signatureWidth + 9 * outputScale, height - 25 * outputScale);
     context.textAlign = "right";
     context.font = `600 ${9 * outputScale}px 'Hind Siliguri', sans-serif`;
     context.fillStyle = "rgba(255, 255, 255, 0.9)";
