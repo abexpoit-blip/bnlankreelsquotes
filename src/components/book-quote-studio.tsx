@@ -369,9 +369,12 @@ export function BookQuoteStudio() {
     const textX = align === "left" ? -(quoteWidth / 200) * width : align === "right" ? (quoteWidth / 200) * width : 0;
     const lineHeight = fittedFontSize * outputScale * 1.42;
     const startY = -((lines.length - 1) * lineHeight) / 2;
-    const creditCount = Number(showQuoteBy && Boolean(author.trim())) + Number(showVoiceBy && Boolean(displayedVoiceBy.trim()));
+    const hasQuoteCredit = showQuoteBy && Boolean(author.trim());
+    const hasVoiceCredit = showVoiceBy && Boolean(displayedVoiceBy.trim());
+    const isCombinedCredit = sameCreditPerson && hasQuoteCredit && hasVoiceCredit;
+    const creditCount = Number(hasQuoteCredit) + Number(hasVoiceCredit && !isCombinedCredit);
     const panelTop = startY - 25 * outputScale;
-    const panelBottom = startY + Math.max(lines.length - 1, 0) * lineHeight + (creditCount ? 56 : 24) * outputScale;
+    const panelBottom = startY + Math.max(lines.length - 1, 0) * lineHeight + (creditCount ? 76 + Math.max(creditCount - 1, 0) * 34 : 24) * outputScale;
     const panelOpacity = quoteBackgroundOpacity / 100;
     if (quoteStyleId === "glass") {
       context.fillStyle = `rgba(10, 17, 20, ${panelOpacity})`;
@@ -404,11 +407,48 @@ export function BookQuoteStudio() {
     context.shadowBlur = 12 * outputScale;
     lines.forEach((line, index) => context.fillText(line, textX, startY + index * lineHeight));
     context.shadowBlur = 0;
-    context.font = `600 ${10.5 * outputScale}px 'Hind Siliguri', sans-serif`;
-    context.fillStyle = textColor;
-    const creditStart = startY + lines.length * lineHeight + 10 * outputScale;
-    if (showQuoteBy && author.trim()) context.fillText(`Quote By — ${author.trim()}`, textX, creditStart);
-    if (showVoiceBy && displayedVoiceBy.trim()) context.fillText(`Voice By — ${displayedVoiceBy.trim()}`, textX, creditStart + (showQuoteBy && author.trim() ? 15 * outputScale : 0));
+    const credits = isCombinedCredit
+      ? [{ label: "QUOTE & VOICE BY", name: author.trim() }]
+      : [
+          ...(hasQuoteCredit ? [{ label: "QUOTE BY", name: author.trim() }] : []),
+          ...(hasVoiceCredit ? [{ label: "VOICE BY", name: displayedVoiceBy.trim() }] : []),
+        ];
+    const badgeWidth = Math.min((quoteWidth / 100) * width, 210 * outputScale);
+    const badgeHeight = 29 * outputScale;
+    const badgeLeft = align === "left" ? textX : align === "right" ? textX - badgeWidth : -badgeWidth / 2;
+    const creditStart = startY + lines.length * lineHeight + 12 * outputScale;
+    credits.forEach((credit, index) => {
+      const badgeTop = creditStart + index * 34 * outputScale;
+      const badgeGradient = context.createLinearGradient(badgeLeft, 0, badgeLeft + badgeWidth, 0);
+      badgeGradient.addColorStop(0, "rgba(10, 18, 20, 0.9)");
+      badgeGradient.addColorStop(0.52, "rgba(25, 31, 29, 0.94)");
+      badgeGradient.addColorStop(1, "rgba(10, 18, 20, 0.9)");
+      context.fillStyle = badgeGradient;
+      context.strokeStyle = "rgba(244, 208, 124, 0.5)";
+      context.lineWidth = 0.8 * outputScale;
+      context.beginPath();
+      context.roundRect(badgeLeft, badgeTop, badgeWidth, badgeHeight, badgeHeight / 2);
+      context.fill();
+      context.stroke();
+      const dividerX = badgeLeft + 78 * outputScale;
+      context.fillStyle = "rgba(244, 208, 124, 0.32)";
+      context.fillRect(dividerX, badgeTop + 7 * outputScale, 0.7 * outputScale, badgeHeight - 14 * outputScale);
+      context.textBaseline = "middle";
+      context.textAlign = "center";
+      context.shadowBlur = 0;
+      context.font = `700 ${6.3 * outputScale}px 'Hind Siliguri', sans-serif`;
+      context.fillStyle = "rgba(255, 246, 220, 0.72)";
+      context.fillText(credit.label, badgeLeft + 39 * outputScale, badgeTop + badgeHeight / 2);
+      context.font = `700 ${13.5 * outputScale}px 'Tiro Bangla', 'Hind Siliguri', serif`;
+      context.fillStyle = "rgba(247, 211, 126, 1)";
+      context.shadowColor = "rgba(0, 0, 0, 0.85)";
+      context.shadowBlur = 5 * outputScale;
+      const availableNameWidth = badgeWidth - 91 * outputScale;
+      let displayName = credit.name;
+      while (displayName.length > 1 && context.measureText(displayName).width > availableNameWidth) displayName = `${displayName.slice(0, -2).trim()}…`;
+      context.fillText(displayName, dividerX + availableNameWidth / 2 + 6 * outputScale, badgeTop + badgeHeight / 2 + 0.5 * outputScale);
+      context.shadowBlur = 0;
+    });
     context.restore();
     context.save();
     const footerHeight = 82 * outputScale;
@@ -645,8 +685,14 @@ export function BookQuoteStudio() {
                 <p>{quote}</p>
                 {(showQuoteBy && author.trim() || showVoiceBy && displayedVoiceBy.trim()) && (
                   <span className="credit-row" style={{ justifyContent: align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center" }}>
-                    {showQuoteBy && author.trim() && <span className="credit-pill"><small>Quote By</small><strong>{author}</strong></span>}
-                    {showVoiceBy && displayedVoiceBy.trim() && <span className="credit-pill voice-credit"><small>Voice By</small><strong>{displayedVoiceBy}</strong></span>}
+                    {sameCreditPerson && showQuoteBy && showVoiceBy && author.trim() ? (
+                      <span className="credit-pill combined-credit"><small>Quote &amp; Voice By</small><i aria-hidden="true" /><strong>{author}</strong><b aria-hidden="true" /></span>
+                    ) : (
+                      <>
+                        {showQuoteBy && author.trim() && <span className="credit-pill"><small>Quote By</small><i aria-hidden="true" /><strong>{author}</strong><b aria-hidden="true" /></span>}
+                        {showVoiceBy && displayedVoiceBy.trim() && <span className="credit-pill voice-credit"><small>Voice By</small><i aria-hidden="true" /><strong>{displayedVoiceBy}</strong><b aria-hidden="true" /></span>}
+                      </>
+                    )}
                   </span>
                 )}
                 <span
