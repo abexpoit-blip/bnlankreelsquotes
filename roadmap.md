@@ -19,3 +19,4 @@
 - [x] Restore direct 10–64px quote sizing, reliable drag placement, and adjustable quote-background transparency in preview and exports.
 - [x] Support 1000-word quotes, larger own-brand footer, uploaded-video overlays, and native MP4 download.
 - [x] Redesign Quote By and Voice By as prominent premium name-focused credits in preview and exports.
+- [x] Refine Quote By/Voice By into a signature-style credit (gold script name, no pill border) and show the drag outline only on hover.
