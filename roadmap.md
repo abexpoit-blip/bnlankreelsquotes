@@ -13,3 +13,5 @@
 - [x] Expand the library to 120 fully unique photorealistic emotional templates with auto-fitted readable text placement.
 - [x] Add a new "জাপান" category with 100 unique Japan natural-scenery templates (220 total), auto-fitted readable text.
 - [x] Fix template-grid row overlap (grid-auto-rows: max-content) and show live template count badge.
+- [x] Expand quotes to 500 characters with auto-fit and adjustable quote-box width across preview and exports.
+- [x] Replace 20 generic Japan scenes with premium samurai districts, castles, historic places, gardens, and iconic nature.

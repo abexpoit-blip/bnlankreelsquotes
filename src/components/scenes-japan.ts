@@ -1,24 +1,24 @@
 // Japan natural scenery scenes — generated, do not edit by hand
-import fujiLakeSunriseJapanScene from "@/assets/scene-001-fuji-lake-sunrise.jpg";
-import chureitoSakuraFujiJapanScene from "@/assets/scene-002-chureito-sakura-fuji.jpg";
-import sakuraRiverTunnelJapanScene from "@/assets/scene-003-sakura-river-tunnel.jpg";
-import chidorigafuchiMoatJapanScene from "@/assets/scene-004-chidorigafuchi-moat.jpg";
-import kawazuPinkRiverJapanScene from "@/assets/scene-005-kawazu-pink-river.jpg";
-import yoshinoBloomMountainJapanScene from "@/assets/scene-006-yoshino-bloom-mountain.jpg";
-import shibazakuraPinkCarpetJapanScene from "@/assets/scene-007-shibazakura-pink-carpet.jpg";
-import wisteriaHangingTunnelJapanScene from "@/assets/scene-008-wisteria-hanging-tunnel.jpg";
-import ginkgoGoldenAvenueJapanScene from "@/assets/scene-009-ginkgo-golden-avenue.jpg";
-import momijiTempleStepsJapanScene from "@/assets/scene-010-momiji-temple-steps.jpg";
-import plumBlossomGroveJapanScene from "@/assets/scene-011-plum-blossom-grove.jpg";
-import hydrangeaRainGardenJapanScene from "@/assets/scene-012-hydrangea-rain-garden.jpg";
-import nemophilaBlueHillJapanScene from "@/assets/scene-013-nemophila-blue-hill.jpg";
-import kochiaCrimsonHillJapanScene from "@/assets/scene-014-kochia-crimson-hill.jpg";
-import sunflowerSummerFieldJapanScene from "@/assets/scene-015-sunflower-summer-field.jpg";
-import nanohanaYellowMeadowJapanScene from "@/assets/scene-016-nanohana-yellow-meadow.jpg";
-import lavenderRollingRowsJapanScene from "@/assets/scene-017-lavender-rolling-rows.jpg";
-import cosmosPinkBreezeJapanScene from "@/assets/scene-018-cosmos-pink-breeze.jpg";
-import susukiSilverGrassJapanScene from "@/assets/scene-019-susuki-silver-grass.jpg";
-import lotusMistyPondJapanScene from "@/assets/scene-020-lotus-misty-pond.jpg";
+import himejiCastleJapanScene from "@/assets/japan-himeji-castle-sakura.jpg";
+import matsumotoCastleJapanScene from "@/assets/japan-matsumoto-castle-blue-hour.jpg";
+import kanazawaSamuraiJapanScene from "@/assets/japan-kanazawa-samurai-district.jpg";
+import kakunodateSamuraiJapanScene from "@/assets/japan-kakunodate-samurai-autumn.jpg";
+import samuraiDojoJapanScene from "@/assets/japan-samurai-dojo-dawn.jpg";
+import osakaCastleJapanScene from "@/assets/japan-osaka-castle-sunset.jpg";
+import kumamotoCastleJapanScene from "@/assets/japan-kumamoto-castle.jpg";
+import inuyamaCastleJapanScene from "@/assets/japan-inuyama-castle-mist.jpg";
+import gionLanternJapanScene from "@/assets/japan-gion-lantern-twilight.jpg";
+import shirakawagoSummerJapanScene from "@/assets/japan-shirakawago-summer.jpg";
+import kinkakujiJapanScene from "@/assets/japan-kinkakuji-autumn-dawn.jpg";
+import fushimiInariJapanScene from "@/assets/japan-fushimi-inari-mist.jpg";
+import naraDeerJapanScene from "@/assets/japan-nara-deer-lanterns.jpg";
+import kenrokuenJapanScene from "@/assets/japan-kenrokuen-winter.jpg";
+import ritsurinJapanScene from "@/assets/japan-ritsurin-garden-dawn.jpg";
+import miyajimaJapanScene from "@/assets/japan-miyajima-sunset.jpg";
+import takachihoJapanScene from "@/assets/japan-takachiho-gorge-rays.jpg";
+import yakushimaAncientJapanScene from "@/assets/japan-yakushima-ancient-cedar.jpg";
+import tateyamaJapanScene from "@/assets/japan-tateyama-snow-walls.jpg";
+import kawaguchiFujiJapanScene from "@/assets/japan-kawaguchi-fuji-autumn.jpg";
 import camelliaWinterCliffJapanScene from "@/assets/scene-021-camellia-winter-cliff.jpg";
 import riceTerracesDawnMirrorJapanScene from "@/assets/scene-022-rice-terraces-dawn-mirror.jpg";
 import greenTerracesMistJapanScene from "@/assets/scene-023-green-terraces-mist.jpg";
@@ -107,26 +107,26 @@ export type JapanScene = {
 };
 
 export const japanScenes: JapanScene[] = [
-  { title: "ফুজির ভোর", category: "জাপান", image: fujiLakeSunriseJapanScene, position: "center", tone: "tone-forest", quoteTop: 30, quoteLeft: 50, quoteWidth: 72, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
-  { title: "প্যাগোডা ও ফুজি", category: "জাপান", image: chureitoSakuraFujiJapanScene, position: "center", tone: "tone-rose", quoteTop: 33, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "সাকুরা নদী", category: "জাপান", image: sakuraRiverTunnelJapanScene, position: "center", tone: "tone-forest", quoteTop: 36, quoteLeft: 44, quoteWidth: 68, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "পুরোনো খালের সাকুরা", category: "জাপান", image: chidorigafuchiMoatJapanScene, position: "center", tone: "tone-amber", quoteTop: 25, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "আগেভাগের বসন্ত", category: "জাপান", image: kawazuPinkRiverJapanScene, position: "center", tone: "tone-forest", quoteTop: 29, quoteLeft: 50, quoteWidth: 70, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "ফুলে ঢাকা পাহাড়", category: "জাপান", image: yoshinoBloomMountainJapanScene, position: "center", tone: "tone-amber", quoteTop: 32, quoteLeft: 56, quoteWidth: 74, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "গোলাপি ফুলের কার্পেট", category: "জাপান", image: shibazakuraPinkCarpetJapanScene, position: "center", tone: "tone-amber", quoteTop: 35, quoteLeft: 50, quoteWidth: 66, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "উইস্টেরিয়া টানেল", category: "জাপান", image: wisteriaHangingTunnelJapanScene, position: "center", tone: "tone-rose", quoteTop: 27, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "সোনালি গিনকগো পথ", category: "জাপান", image: ginkgoGoldenAvenueJapanScene, position: "center", tone: "tone-amber", quoteTop: 30, quoteLeft: 44, quoteWidth: 72, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "লাল মেপলের সিঁড়ি", category: "জাপান", image: momijiTempleStepsJapanScene, position: "center", tone: "tone-amber", quoteTop: 33, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "সাদা বরই ফুল", category: "জাপান", image: plumBlossomGroveJapanScene, position: "center", tone: "tone-rose", quoteTop: 36, quoteLeft: 50, quoteWidth: 68, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "বৃষ্টির হাইড্রেঞ্জিয়া", category: "জাপান", image: hydrangeaRainGardenJapanScene, position: "center", tone: "tone-rose", quoteTop: 25, quoteLeft: 56, quoteWidth: 76, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
-  { title: "নীল ফুলের পাহাড়", category: "জাপান", image: nemophilaBlueHillJapanScene, position: "center", tone: "tone-rose", quoteTop: 29, quoteLeft: 50, quoteWidth: 70, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "লাল ঝোপের পথ", category: "জাপান", image: kochiaCrimsonHillJapanScene, position: "center", tone: "tone-rose", quoteTop: 32, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "সূর্যমুখীর ক্ষেত", category: "জাপান", image: sunflowerSummerFieldJapanScene, position: "center", tone: "tone-rose", quoteTop: 35, quoteLeft: 44, quoteWidth: 66, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
-  { title: "হলুদ ফুলের মাঠ", category: "জাপান", image: nanohanaYellowMeadowJapanScene, position: "center", tone: "tone-amber", quoteTop: 27, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "ল্যাভেন্ডারের সারি", category: "জাপান", image: lavenderRollingRowsJapanScene, position: "center", tone: "tone-rose", quoteTop: 30, quoteLeft: 50, quoteWidth: 72, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "গোলাপি কসমস", category: "জাপান", image: cosmosPinkBreezeJapanScene, position: "center", tone: "tone-rose", quoteTop: 33, quoteLeft: 56, quoteWidth: 74, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
-  { title: "রুপালি ঘাস", category: "জাপান", image: susukiSilverGrassJapanScene, position: "center", tone: "tone-amber", quoteTop: 36, quoteLeft: 50, quoteWidth: 68, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
-  { title: "পদ্মের পুকুর", category: "জাপান", image: lotusMistyPondJapanScene, position: "center", tone: "tone-forest", quoteTop: 25, quoteLeft: 50, quoteWidth: 76, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "হিমেজি দুর্গের সাকুরা", category: "জাপান", image: himejiCastleJapanScene, position: "center", tone: "tone-rose", quoteTop: 24, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "মাৎসুমোতো দুর্গের নীল রাত", category: "জাপান", image: matsumotoCastleJapanScene, position: "center", tone: "tone-midnight", quoteTop: 24, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "কানাজাওয়া সামুরাই পাড়া", category: "জাপান", image: kanazawaSamuraiJapanScene, position: "center", tone: "tone-amber", quoteTop: 26, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "কাকুনোদাতে সামুরাই পথ", category: "জাপান", image: kakunodateSamuraiJapanScene, position: "center", tone: "tone-amber", quoteTop: 29, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "ভোরের সামুরাই দোজো", category: "জাপান", image: samuraiDojoJapanScene, position: "center", tone: "tone-forest", quoteTop: 27, quoteLeft: 58, quoteWidth: 72, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "ওসাকা দুর্গের সূর্যাস্ত", category: "জাপান", image: osakaCastleJapanScene, position: "center", tone: "tone-rose", quoteTop: 24, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "কুমামোতো সামুরাই দুর্গ", category: "জাপান", image: kumamotoCastleJapanScene, position: "center", tone: "tone-cool", quoteTop: 23, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "কুয়াশায় ইনুয়ামা দুর্গ", category: "জাপান", image: inuyamaCastleJapanScene, position: "center", tone: "tone-amber", quoteTop: 27, quoteLeft: 42, quoteWidth: 72, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "গিওনের আলোকিত সন্ধ্যা", category: "জাপান", image: gionLanternJapanScene, position: "center", tone: "tone-midnight", quoteTop: 25, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "সবুজ শিরাকাওয়া-গো", category: "জাপান", image: shirakawagoSummerJapanScene, position: "center", tone: "tone-forest", quoteTop: 23, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "শরতের সোনালি মন্দির", category: "জাপান", image: kinkakujiJapanScene, position: "center", tone: "tone-amber", quoteTop: 23, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "কুয়াশার ফুশিমি ইনারি", category: "জাপান", image: fushimiInariJapanScene, position: "center", tone: "tone-midnight", quoteTop: 28, quoteLeft: 50, quoteWidth: 78, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "নারার হরিণ ও পাথরবাতি", category: "জাপান", image: naraDeerJapanScene, position: "center", tone: "tone-forest", quoteTop: 27, quoteLeft: 62, quoteWidth: 65, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "তুষারের কেনরোকুয়েন", category: "জাপান", image: kenrokuenJapanScene, position: "center", tone: "tone-cool", quoteTop: 22, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "রিৎসুরিন বাগানের ভোর", category: "জাপান", image: ritsurinJapanScene, position: "center", tone: "tone-forest", quoteTop: 23, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "মিয়াজিমার আগুনরাঙা তোরি", category: "জাপান", image: miyajimaJapanScene, position: "center", tone: "tone-amber", quoteTop: 23, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "তাকাচিহো গিরিখাতের আলো", category: "জাপান", image: takachihoJapanScene, position: "center", tone: "tone-forest", quoteTop: 26, quoteLeft: 50, quoteWidth: 78, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "ইয়াকুশিমার প্রাচীন দেবদারু", category: "জাপান", image: yakushimaAncientJapanScene, position: "center", tone: "tone-forest", quoteTop: 30, quoteLeft: 42, quoteWidth: 68, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
+  { title: "তাতেয়ামার বরফ প্রাচীর", category: "জাপান", image: tateyamaJapanScene, position: "center", tone: "tone-cool", quoteTop: 24, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#263028", textStyle: "bold" },
+  { title: "শরতের কাওয়াগুচি ও ফুজি", category: "জাপান", image: kawaguchiFujiJapanScene, position: "center", tone: "tone-rose", quoteTop: 25, quoteLeft: 50, quoteWidth: 82, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
   { title: "শীতের ক্যামেলিয়া", category: "জাপান", image: camelliaWinterCliffJapanScene, position: "center", tone: "tone-cool", quoteTop: 29, quoteLeft: 44, quoteWidth: 70, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
   { title: "ধানখেতে ভোর", category: "জাপান", image: riceTerracesDawnMirrorJapanScene, position: "center", tone: "tone-cool", quoteTop: 32, quoteLeft: 50, quoteWidth: 74, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },
   { title: "সবুজ সিঁড়ি-খেত", category: "জাপান", image: greenTerracesMistJapanScene, position: "center", tone: "tone-forest", quoteTop: 35, quoteLeft: 50, quoteWidth: 66, quoteRotate: 0, ink: "#fff4e8", textStyle: "light" },

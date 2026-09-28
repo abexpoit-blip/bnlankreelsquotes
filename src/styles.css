@@ -211,6 +211,8 @@
   .credit-pill strong { overflow: hidden; text-overflow: ellipsis; color: inherit; font-size: 8px; font-weight: 600; white-space: nowrap; }
   .voice-credit small { color: color-mix(in oklab, var(--accent) 52%, var(--primary-foreground)); }
   .resize-handle { position: absolute; right: -12px; bottom: -12px; width: 18px; height: 18px; border: 2px solid var(--primary-foreground); border-radius: 50%; background: var(--primary); box-shadow: 0 2px 7px color-mix(in oklab, var(--foreground) 45%, transparent); cursor: nwse-resize; touch-action: none; }
+  .width-resize-handle { position: absolute; right: -13px; top: 50%; width: 12px; height: 34px; transform: translateY(-50%); border: 2px solid var(--primary-foreground); border-radius: 6px; background: var(--accent); box-shadow: 0 2px 7px color-mix(in oklab, var(--foreground) 45%, transparent); cursor: ew-resize; touch-action: none; }
+  .auto-fit-note { margin-top: 6px; color: var(--muted-foreground); font-size: 9px; line-height: 1.4; }
   .reel-brand { position: absolute; bottom: -5.3%; left: -5.3%; width: 110.6%; min-height: 6.9%; padding: 5px 7%; display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--primary-foreground); background: color-mix(in oklab, var(--foreground) 84%, transparent); font-size: 9px; text-decoration: none; text-shadow: 0 1px 4px color-mix(in oklab, var(--foreground) 86%, transparent); white-space: nowrap; }
   .reel-brand strong, .reel-brand small { display: block; line-height: 1.15; }
   .reel-brand strong { font-size: 9px; letter-spacing: .04em; }
@@ -228,7 +230,7 @@
   .control-label strong { color: var(--foreground); }
   .control-label svg { width: 13px; height: 13px; }
   .control-section textarea, .control-section input:not([type="range"]) { width: 100%; border: 1px solid var(--border); border-radius: 6px; background: var(--background); padding: 9px 10px; outline: none; font-size: 13px; }
-  .control-section textarea { min-height: 92px; resize: vertical; font-family: var(--font-display); line-height: 1.6; }
+  .control-section textarea { min-height: 150px; resize: vertical; font-family: var(--font-display); line-height: 1.6; }
   .control-section input:focus, .control-section textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 12%, transparent); }
   .control-section input[type="range"] { width: 100%; accent-color: var(--primary); }
   .quote-library .control-label svg { width: 14px; }

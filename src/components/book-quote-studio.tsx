@@ -166,6 +166,7 @@ export function BookQuoteStudio() {
   const [showVoiceBy, setShowVoiceBy] = useState(true);
   const [sameCreditPerson, setSameCreditPerson] = useState(false);
   const [fontSize, setFontSize] = useState(16);
+  const [quoteWidth, setQuoteWidth] = useState(templates[0]?.quoteWidth ?? 76);
   const [textColor, setTextColor] = useState(templates[0]?.ink ?? "#fff4e8");
   const [quotePosition, setQuotePosition] = useState({ x: templates[0]?.quoteLeft ?? 50, y: templates[0]?.quoteTop ?? 30 });
   const [align, setAlign] = useState<"left" | "center" | "right">("center");
@@ -181,17 +182,19 @@ export function BookQuoteStudio() {
   const safeAreaRef = useRef<HTMLDivElement>(null);
   const quoteRef = useRef<HTMLDivElement>(null);
   const interactionRef = useRef<{
-    mode: "move" | "resize";
+    mode: "move" | "resize" | "width";
     pointerId: number;
     startX: number;
     startY: number;
     position: { x: number; y: number };
     fontSize: number;
+    quoteWidth: number;
   } | null>(null);
   const current = templates[selected] ?? templates[0];
   const activeFont = fontOptions.find((item) => item.id === fontId) ?? fontOptions[0];
   const activeFormat = videoFormats.find((item) => item.id === formatId) ?? videoFormats[0];
   const displayedVoiceBy = sameCreditPerson ? author : voiceBy;
+  const fittedFontSize = Math.min(fontSize, quote.length > 400 ? 12 : quote.length > 300 ? 13 : quote.length > 220 ? 14 : quote.length > 150 ? 15 : fontSize);
 
   const visibleTemplates = useMemo(
     () => templates.filter((template) =>
@@ -207,7 +210,7 @@ export function BookQuoteStudio() {
 
   if (!current) return null;
 
-  const beginInteraction = (event: ReactPointerEvent<HTMLElement>, mode: "move" | "resize") => {
+  const beginInteraction = (event: ReactPointerEvent<HTMLElement>, mode: "move" | "resize" | "width") => {
     event.preventDefault();
     event.stopPropagation();
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -218,6 +221,7 @@ export function BookQuoteStudio() {
       startY: event.clientY,
       position: quotePosition,
       fontSize,
+      quoteWidth,
     };
   };
 
@@ -232,6 +236,10 @@ export function BookQuoteStudio() {
     if (interaction.mode === "resize") {
       const delta = ((deltaX + deltaY) / 2 / bounds.width) * 52;
       setFontSize(Math.round(Math.min(38, Math.max(12, interaction.fontSize + delta))));
+      return;
+    }
+    if (interaction.mode === "width") {
+      setQuoteWidth(Math.round(Math.min(92, Math.max(42, interaction.quoteWidth + (deltaX / bounds.width) * 120))));
       return;
     }
     const quoteBounds = quoteRef.current?.getBoundingClientRect();
@@ -253,6 +261,7 @@ export function BookQuoteStudio() {
     setSelected(templates.findIndex((item) => item.id === template.id));
     setTextColor(template.ink);
     setQuotePosition({ x: template.quoteLeft, y: template.quoteTop });
+    setQuoteWidth(template.quoteWidth);
   };
 
   const applyLibraryQuote = (item: (typeof quoteLibrary)[number]) => {
@@ -279,10 +288,10 @@ export function BookQuoteStudio() {
     context.textBaseline = "middle";
     context.fillStyle = textColor;
     const outputScale = width / 360;
-    context.font = `600 ${fontSize * outputScale}px ${activeFont.family}`;
-    const lines = wrapCanvasText(context, quote, (current.quoteWidth / 100) * width);
-    const textX = align === "left" ? -(current.quoteWidth / 200) * width : align === "right" ? (current.quoteWidth / 200) * width : 0;
-    const lineHeight = fontSize * outputScale * 1.42;
+    context.font = `600 ${fittedFontSize * outputScale}px ${activeFont.family}`;
+    const lines = wrapCanvasText(context, quote, (quoteWidth / 100) * width);
+    const textX = align === "left" ? -(quoteWidth / 200) * width : align === "right" ? (quoteWidth / 200) * width : 0;
+    const lineHeight = fittedFontSize * outputScale * 1.42;
     const startY = -((lines.length - 1) * lineHeight) / 2;
     const creditCount = Number(showQuoteBy && Boolean(author.trim())) + Number(showVoiceBy && Boolean(displayedVoiceBy.trim()));
     const panelTop = startY - 25 * outputScale;
@@ -292,7 +301,7 @@ export function BookQuoteStudio() {
       context.strokeStyle = "rgba(255, 255, 255, 0.16)";
       context.lineWidth = outputScale;
       context.beginPath();
-      context.roundRect(-(current.quoteWidth / 200) * width - 20 * outputScale, panelTop, (current.quoteWidth / 100) * width + 40 * outputScale, panelBottom - panelTop, 10 * outputScale);
+      context.roundRect(-(quoteWidth / 200) * width - 20 * outputScale, panelTop, (quoteWidth / 100) * width + 40 * outputScale, panelBottom - panelTop, 10 * outputScale);
       context.fill();
       context.stroke();
       context.fillStyle = textColor;
@@ -449,10 +458,10 @@ export function BookQuoteStudio() {
                 className={cn("printed-quote", `text-${current.textStyle}`, `quote-style-${quoteStyleId}`)}
                 style={{
                   top: `${quotePosition.y}%`,
-                  fontSize: `${fontSize}px`,
+                  fontSize: `${fittedFontSize}px`,
                   textAlign: align,
                   color: textColor,
-                  width: `${current.quoteWidth}%`,
+                  width: `${quoteWidth}%`,
                   left: `${quotePosition.x}%`,
                   transform: `translate(-50%, -50%) rotate(${current.quoteRotate}deg)`,
                   fontFamily: activeFont.family,
@@ -483,6 +492,19 @@ export function BookQuoteStudio() {
                   onPointerUp={endInteraction}
                   onPointerCancel={endInteraction}
                 />
+                <span
+                  className="width-resize-handle"
+                  role="slider"
+                  aria-label="কোট বক্স চওড়া বা সরু করুন"
+                  aria-valuemin={42}
+                  aria-valuemax={92}
+                  aria-valuenow={quoteWidth}
+                  tabIndex={0}
+                  onPointerDown={(event) => beginInteraction(event, "width")}
+                  onPointerMove={updateInteraction}
+                  onPointerUp={endInteraction}
+                  onPointerCancel={endInteraction}
+                />
               </div>
               <a className="reel-brand" href="https://www.facebook.com/MidnightNoteofficial" target="_blank" rel="noreferrer" aria-label="মধ্যরাতের চিরকুট Facebook পেজ">
                 <span className="brand-mini">ম</span><span><strong>মধ্যরাতের চিরকুট • Design By Shovon</strong><small>facebook.com/MidnightNoteofficial</small></span>
@@ -506,8 +528,8 @@ export function BookQuoteStudio() {
             <SlidersHorizontal />
           </div>
           <div className="control-section">
-            <div className="control-label"><span>কোট</span><span>{quote.length}/১৩০</span></div>
-            <textarea maxLength={130} value={quote} onChange={(event) => setQuote(event.target.value)} />
+            <div className="control-label"><span>কোট</span><span>{quote.length}/৫০০</span></div>
+            <textarea maxLength={500} value={quote} onChange={(event) => setQuote(event.target.value)} />
           </div>
           <div className="control-section quote-library">
             <div className="control-label"><span className="inline-flex items-center gap-1"><Quote /> কোট লাইব্রেরি</span><span>{visibleQuotes.length}টি</span></div>
@@ -544,6 +566,11 @@ export function BookQuoteStudio() {
           <div className="control-section">
             <div className="control-label"><span>লেখার মাপ</span><strong>{fontSize}px</strong></div>
             <input aria-label="লেখার মাপ" type="range" min="12" max="38" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
+            {fittedFontSize < fontSize && <p className="auto-fit-note">দীর্ঘ কোটটি ফ্রেমে রাখতে {fittedFontSize}px-এ মানানো হয়েছে</p>}
+          </div>
+          <div className="control-section">
+            <div className="control-label"><span>কোট বক্সের প্রস্থ</span><strong>{quoteWidth}%</strong></div>
+            <input aria-label="কোট বক্সের প্রস্থ" type="range" min="42" max="92" value={quoteWidth} onChange={(event) => setQuoteWidth(Number(event.target.value))} />
           </div>
           <div className="control-section">
             <label className="control-label" htmlFor="textColor"><span>লেখার রঙ</span><strong>{textColor.toUpperCase()}</strong></label>
