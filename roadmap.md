@@ -15,3 +15,4 @@
 - [x] Fix template-grid row overlap (grid-auto-rows: max-content) and show live template count badge.
 - [x] Expand quotes to 500 characters with auto-fit and adjustable quote-box width across preview and exports.
 - [x] Replace 20 generic Japan scenes with premium samurai districts, castles, historic places, gardens, and iconic nature.
+- [x] Add selectable cinematic zoom, pan, vertical drift, and still motion shared by preview and video export.

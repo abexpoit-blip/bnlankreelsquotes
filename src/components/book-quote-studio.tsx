@@ -103,6 +103,13 @@ const bnNumber = (n: number) => String(n).replace(/\d/g, (d: string) => "০১�
 
 const durations = [6, 10, 15, 20, 30] as const;
 
+const motionOptions = [
+  { id: "zoom", label: "ধীর জুম", detail: "সামনে এগিয়ে আসবে" },
+  { id: "pan", label: "সিনেম্যাটিক প্যান", detail: "বাম থেকে ডানে" },
+  { id: "drift", label: "ভার্টিক্যাল ড্রিফট", detail: "নিচ থেকে ওপরে" },
+  { id: "still", label: "স্থির", detail: "কোনো মুভমেন্ট নেই" },
+] as const;
+
 const videoFormats = [
   { id: "reel-hd", label: "Reels HD", detail: "9:16 · 1080 × 1920", width: 1080, height: 1920 },
   { id: "reel-lite", label: "Reels Lite", detail: "9:16 · 720 × 1280", width: 720, height: 1280 },
@@ -174,6 +181,7 @@ export function BookQuoteStudio() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [duration, setDuration] = useState<(typeof durations)[number]>(10);
+  const [motionId, setMotionId] = useState<(typeof motionOptions)[number]["id"]>("zoom");
   const [formatId, setFormatId] = useState<(typeof videoFormats)[number]["id"]>("reel-hd");
   const [quoteStyleId, setQuoteStyleId] = useState<(typeof quoteStyles)[number]["id"]>("glass");
   const [quoteLibraryFilter, setQuoteLibraryFilter] = useState("সব");
@@ -193,6 +201,7 @@ export function BookQuoteStudio() {
   const current = templates[selected] ?? templates[0];
   const activeFont = fontOptions.find((item) => item.id === fontId) ?? fontOptions[0];
   const activeFormat = videoFormats.find((item) => item.id === formatId) ?? videoFormats[0];
+  const activeMotion = motionOptions.find((item) => item.id === motionId) ?? motionOptions[0];
   const displayedVoiceBy = sameCreditPerson ? author : voiceBy;
   const fittedFontSize = Math.min(fontSize, quote.length > 400 ? 12 : quote.length > 300 ? 13 : quote.length > 220 ? 14 : quote.length > 150 ? 15 : fontSize);
 
@@ -273,10 +282,14 @@ export function BookQuoteStudio() {
 
   const drawFrame = (context: CanvasRenderingContext2D, image: HTMLImageElement, progress = 0) => {
     const { width, height } = activeFormat;
-    const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight) * (1 + progress * 0.035);
+    const baseScale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
+    const motionScale = motionId === "zoom" ? 1 + progress * 0.07 : motionId === "still" ? 1 : 1.08;
+    const scale = baseScale * motionScale;
     const drawWidth = image.naturalWidth * scale;
     const drawHeight = image.naturalHeight * scale;
-    context.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+    const travelX = motionId === "pan" ? (progress - 0.5) * width * 0.07 : 0;
+    const travelY = motionId === "drift" ? (0.5 - progress) * height * 0.07 : 0;
+    context.drawImage(image, (width - drawWidth) / 2 + travelX, (height - drawHeight) / 2 + travelY, drawWidth, drawHeight);
     context.fillStyle = "rgba(24, 18, 12, 0.06)";
     context.fillRect(0, 0, width, height);
     context.save();
@@ -368,7 +381,7 @@ export function BookQuoteStudio() {
     const durationMs = duration * 1000;
     const render = (now: number) => {
       const progress = Math.min((now - startedAt) / durationMs, 1);
-      drawFrame(context, image, Math.sin(progress * Math.PI) * 0.6);
+      drawFrame(context, image, progress);
       if (progress < 1) requestAnimationFrame(render);
       else recorder.stop();
     };
@@ -449,8 +462,11 @@ export function BookQuoteStudio() {
             <div><span className="live-dot" /> লাইভ প্রিভিউ</div>
             <div className="flex items-center gap-2"><Sparkles /> HD Preview <ChevronDown /></div>
           </div>
-          <div className={cn("reel-frame", current.tone, isPlaying && "is-playing")} style={{ aspectRatio: `${activeFormat.width} / ${activeFormat.height}` }}>
-            <img ref={imageRef} src={current.image} alt={`${current.title} আবেগময় টেমপ্লেট`} width={768} height={1376} style={{ objectPosition: current.position }} />
+          <div
+            className={cn("reel-frame", current.tone, isPlaying && "is-playing")}
+            style={{ aspectRatio: `${activeFormat.width} / ${activeFormat.height}`, "--motion-duration": `${duration}s` } as CSSProperties}
+          >
+            <img className={`motion-${motionId}`} ref={imageRef} src={current.image} alt={`${current.title} আবেগময় টেমপ্লেট`} width={768} height={1376} style={{ objectPosition: current.position }} />
             <div className="film-grain" />
             <div ref={safeAreaRef} className="safe-area">
               <div
@@ -606,6 +622,10 @@ export function BookQuoteStudio() {
             ))}
           </div>
           <div className="control-section export-settings">
+            <label className="control-label" htmlFor="motion">ছবির মুভমেন্ট</label>
+            <select id="motion" value={motionId} onChange={(event) => setMotionId(event.target.value as (typeof motionOptions)[number]["id"])}>
+              {motionOptions.map((motion) => <option key={motion.id} value={motion.id}>{motion.label} — {motion.detail}</option>)}
+            </select>
             <label className="control-label" htmlFor="duration">ভিডিও সময়</label>
             <select id="duration" value={duration} onChange={(event) => setDuration(Number(event.target.value) as (typeof durations)[number])}>
               {durations.map((seconds) => <option key={seconds} value={seconds}>{seconds} সেকেন্ড</option>)}
@@ -618,7 +638,7 @@ export function BookQuoteStudio() {
           <a className="facebook-link" href="https://www.facebook.com/MidnightNoteofficial" target="_blank" rel="noreferrer"><Facebook /> facebook.com/MidnightNoteofficial</a>
           <div className="export-card">
             <div className="export-icon"><LibraryBig /></div>
-            <div><strong>Ready for Facebook</strong><span>{duration} সেকেন্ড · {activeFormat.detail}</span></div>
+            <div><strong>Ready for Facebook</strong><span>{duration} সেকেন্ড · {activeMotion.label} · {activeFormat.detail}</span></div>
             <Button onClick={exportVideo} disabled={isExporting}><Download /> {isExporting ? "রেন্ডারিং" : "ভিডিও"}</Button>
           </div>
         </aside>
