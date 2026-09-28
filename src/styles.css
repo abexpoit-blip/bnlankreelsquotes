@@ -223,7 +223,8 @@
   .reel-frame.is-playing > img.motion-still { animation: none; }
   .film-grain { position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: repeating-linear-gradient(110deg, transparent 0 3px, color-mix(in oklab, var(--card) 7%, transparent) 4px); mix-blend-mode: soft-light; }
   .safe-area { position: absolute; inset: 5%; }
-  .printed-quote { position: absolute; z-index: 2; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; overflow-wrap: anywhere; text-shadow: 0 2px 5px var(--quote-text-shadow), 0 0 14px var(--quote-text-shadow); filter: none; mix-blend-mode: normal; cursor: grab; touch-action: none; user-select: none; outline: 1px dashed color-mix(in oklab, currentColor 58%, transparent); outline-offset: 7px; }
+  .printed-quote { position: absolute; z-index: 2; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; overflow-wrap: anywhere; text-shadow: 0 2px 5px var(--quote-text-shadow), 0 0 14px var(--quote-text-shadow); filter: none; mix-blend-mode: normal; cursor: grab; touch-action: none; user-select: none; }
+  .printed-quote:hover, .printed-quote:active { outline: 1px dashed color-mix(in oklab, currentColor 58%, transparent); outline-offset: 7px; }
   .printed-quote:active { cursor: grabbing; }
   .printed-quote p { white-space: pre-wrap; }
   .printed-quote.text-light { padding: 13px 15px; }
@@ -232,15 +233,13 @@
   .printed-quote.quote-style-editorial { padding: 12px 15px; border-left: 3px solid currentColor; background: linear-gradient(90deg, color-mix(in oklab, var(--foreground) var(--quote-bg-opacity), transparent), transparent); }
   .printed-quote.quote-style-spotlight { padding: 18px; border: 0; background: radial-gradient(ellipse at center, color-mix(in oklab, var(--foreground) var(--quote-bg-opacity), transparent), transparent 74%); }
   .quote-mark { position: absolute; top: -18px; left: -2px; font-size: 30px; line-height: 1; opacity: .16; }
-  .credit-row { display: flex; flex-direction: column; flex-wrap: nowrap; align-items: inherit; gap: 6px; margin-top: 13px; padding-top: 10px; border-top: 1px solid color-mix(in oklab, var(--credit-gold) 30%, transparent); font-family: var(--font-sans); }
-  .credit-pill { position: relative; isolation: isolate; display: inline-grid; grid-template-columns: auto 1px minmax(0, 1fr) 5px; align-items: center; gap: 8px; width: min(100%, 238px); min-height: 34px; max-width: 100%; padding: 5px 10px 5px 12px; overflow: hidden; border: 1px solid var(--credit-border); border-radius: 999px; color: var(--credit-ink); background: linear-gradient(100deg, var(--credit-surface), var(--credit-surface-soft) 52%, var(--credit-surface)); box-shadow: 0 8px 20px color-mix(in oklab, var(--foreground) 48%, transparent), inset 0 1px color-mix(in oklab, var(--credit-ink) 10%, transparent), 0 0 15px color-mix(in oklab, var(--credit-gold) 10%, transparent); line-height: 1; text-shadow: none; backdrop-filter: blur(12px) saturate(1.15); }
-  .credit-pill::before { content: ""; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: linear-gradient(115deg, transparent 18%, color-mix(in oklab, var(--credit-gold) 8%, transparent) 48%, transparent 72%); }
-  .credit-pill small { color: var(--credit-ink-muted); font-size: 6.5px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
-  .credit-pill i { align-self: stretch; width: 1px; margin-block: 2px; background: linear-gradient(180deg, transparent, var(--credit-border), transparent); }
-  .credit-pill strong { overflow: hidden; color: var(--credit-gold); font-family: var(--font-display); font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 2px 8px color-mix(in oklab, var(--foreground) 90%, transparent); }
-  .credit-pill b { width: 5px; height: 5px; border-radius: 50%; background: var(--credit-gold); box-shadow: 0 0 9px color-mix(in oklab, var(--credit-gold) 78%, transparent); }
-  .combined-credit { width: min(100%, 254px); }
-  .voice-credit { border-color: color-mix(in oklab, var(--credit-border) 82%, var(--brand-facebook)); }
+  .credit-row { display: flex; flex-direction: column; flex-wrap: nowrap; align-items: inherit; gap: 9px; margin-top: 14px; font-family: var(--font-sans); }
+  .credit-pill { display: inline-flex; align-items: baseline; gap: 7px; max-width: 100%; min-height: 24px; line-height: 1; overflow: hidden; text-shadow: none; }
+  .credit-pill small { color: color-mix(in oklab, var(--credit-ink) 68%, transparent); font-size: 6.5px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; white-space: nowrap; }
+  .credit-pill i { align-self: center; width: 1px; height: 11px; background: color-mix(in oklab, var(--credit-ink) 28%, transparent); }
+  .credit-pill strong { overflow: hidden; color: var(--credit-gold); font-family: 'Great Vibes', 'Tiro Bangla', var(--font-display); font-size: 22px; font-weight: 400; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 2px 8px color-mix(in oklab, var(--foreground) 88%, transparent), 0 0 16px color-mix(in oklab, var(--credit-gold) 28%, transparent); transform: translateY(-1px); }
+  .credit-pill b { display: none; }
+  .combined-credit strong, .voice-credit strong { font-size: 22px; }
   .resize-handle { position: absolute; right: -12px; bottom: -12px; width: 18px; height: 18px; border: 2px solid var(--primary-foreground); border-radius: 50%; background: var(--primary); box-shadow: 0 2px 7px color-mix(in oklab, var(--foreground) 45%, transparent); cursor: nwse-resize; touch-action: none; }
   .width-resize-handle { position: absolute; right: -13px; top: 50%; width: 12px; height: 34px; transform: translateY(-50%); border: 2px solid var(--primary-foreground); border-radius: 6px; background: var(--accent); box-shadow: 0 2px 7px color-mix(in oklab, var(--foreground) 45%, transparent); cursor: ew-resize; touch-action: none; }
   .auto-fit-note { margin-top: 6px; color: var(--muted-foreground); font-size: 9px; line-height: 1.4; }
