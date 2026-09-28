@@ -484,7 +484,16 @@ export function BookQuoteStudio() {
     if (source instanceof HTMLVideoElement) {
       source.pause();
       source.currentTime = 0;
-      await source.play();
+      source.muted = true;
+      try {
+        await source.play();
+      } catch {
+        stream.getTracks().forEach((track) => track.stop());
+        sourceStream?.getTracks().forEach((track) => track.stop());
+        setVideoError("ভিডিওটি ব্রাউজারে চালানো যায়নি। MP4 (H.264) ভিডিও দিয়ে আবার চেষ্টা করুন।");
+        setIsExporting(false);
+        return;
+      }
     }
     recorder.start(1000);
     const startedAt = performance.now();
@@ -495,7 +504,7 @@ export function BookQuoteStudio() {
       const progress = source instanceof HTMLVideoElement && source.duration ? Math.min(source.currentTime / source.duration, 1) : elapsedProgress;
       drawFrame(context, source, progress);
       setExportProgress(Math.round(elapsedProgress * 100));
-      if (progress < 1) requestAnimationFrame(render);
+      if (elapsedProgress < 1) requestAnimationFrame(render);
       else {
         if (source instanceof HTMLVideoElement) source.pause();
         recorder.stop();
