@@ -438,6 +438,7 @@ export function BookQuoteStudio() {
       const dividerWidth = outputScale;
       const rowWidth = labelWidth + dividerGap + dividerWidth + dividerGap + nameWidth;
       let cursor = align === "left" ? textX : align === "right" ? textX - rowWidth : -rowWidth / 2;
+      context.font = `600 ${6.5 * outputScale}px 'Hind Siliguri', sans-serif`;
       context.fillStyle = "rgba(255, 250, 235, 0.68)";
       context.fillText(credit.label, cursor, rowCenterY - 1 * outputScale);
       cursor += labelWidth + dividerGap;
