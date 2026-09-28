@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -19,9 +19,11 @@ import {
   Search,
   SlidersHorizontal,
   Sparkles,
+  Upload,
   Volume2,
   Mic2,
   Quote,
+  X,
 } from "lucide-react";
 
 import loneManBook from "@/assets/book-lone-man-midnight.jpg";
@@ -141,6 +143,26 @@ const quoteStyles = [
   { id: "spotlight", label: "Soft Spotlight", detail: "মৃদু আলো" },
 ] as const;
 
+const MAX_QUOTE_WORDS = 1000;
+const MP4_MIME_TYPES = [
+  "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+  "video/mp4;codecs=h264,aac",
+  "video/mp4",
+] as const;
+
+const countWords = (value: string) => value.trim() ? value.trim().split(/\s+/u).length : 0;
+
+const clampToWordLimit = (value: string) => {
+  const matches = [...value.matchAll(/\S+/gu)];
+  const overflow = matches[MAX_QUOTE_WORDS];
+  return overflow?.index === undefined ? value : value.slice(0, overflow.index).trimEnd();
+};
+
+const getSupportedMp4MimeType = () => {
+  if (typeof MediaRecorder === "undefined") return null;
+  return MP4_MIME_TYPES.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? null;
+};
+
 function saveBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -188,9 +210,13 @@ export function BookQuoteStudio() {
   const [formatId, setFormatId] = useState<(typeof videoFormats)[number]["id"]>("reel-hd");
   const [quoteStyleId, setQuoteStyleId] = useState<(typeof quoteStyles)[number]["id"]>("glass");
   const [quoteBackgroundOpacity, setQuoteBackgroundOpacity] = useState(48);
+  const [uploadedVideo, setUploadedVideo] = useState<{ name: string; url: string } | null>(null);
+  const [videoError, setVideoError] = useState("");
+  const [exportProgress, setExportProgress] = useState(0);
   const [quoteLibraryFilter, setQuoteLibraryFilter] = useState("সব");
   const [mobilePanel, setMobilePanel] = useState<"templates" | "canvas" | "edit">("canvas");
   const imageRef = useRef<HTMLImageElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const safeAreaRef = useRef<HTMLDivElement>(null);
   const quoteRef = useRef<HTMLDivElement>(null);
   const interactionRef = useRef<{
@@ -208,6 +234,7 @@ export function BookQuoteStudio() {
   const activeMotion = motionOptions.find((item) => item.id === motionId) ?? motionOptions[0];
   const displayedVoiceBy = sameCreditPerson ? author : voiceBy;
   const fittedFontSize = fontSize;
+  const quoteWordCount = countWords(quote);
   const textShadowColor = /^#(?:f|e|d|c|b|a)/i.test(textColor) ? "rgba(0, 0, 0, 0.92)" : "rgba(255, 255, 255, 0.94)";
 
   const visibleTemplates = useMemo(
@@ -221,6 +248,10 @@ export function BookQuoteStudio() {
     () => quoteLibrary.filter((item) => quoteLibraryFilter === "সব" || item.category === quoteLibraryFilter),
     [quoteLibraryFilter],
   );
+
+  useEffect(() => () => {
+    if (uploadedVideo) URL.revokeObjectURL(uploadedVideo.url);
+  }, [uploadedVideo]);
 
   if (!current) return null;
 
@@ -285,16 +316,43 @@ export function BookQuoteStudio() {
     setMobilePanel("canvas");
   };
 
-  const drawFrame = (context: CanvasRenderingContext2D, image: HTMLImageElement, progress = 0) => {
+  const handleQuoteChange = (value: string) => setQuote(clampToWordLimit(value));
+
+  const handleVideoUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("video/")) {
+      setVideoError("শুধু ভিডিও ফাইল নির্বাচন করুন।");
+      return;
+    }
+    if (uploadedVideo) URL.revokeObjectURL(uploadedVideo.url);
+    setUploadedVideo({ name: file.name, url: URL.createObjectURL(file) });
+    setVideoError("");
+    setIsPlaying(true);
+    setMobilePanel("canvas");
+  };
+
+  const removeUploadedVideo = () => {
+    if (uploadedVideo) URL.revokeObjectURL(uploadedVideo.url);
+    setUploadedVideo(null);
+    setVideoError("");
+    setIsPlaying(false);
+  };
+
+  const drawFrame = (context: CanvasRenderingContext2D, source: HTMLImageElement | HTMLVideoElement, progress = 0) => {
     const { width, height } = activeFormat;
-    const baseScale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
+    const sourceWidth = source instanceof HTMLVideoElement ? source.videoWidth : source.naturalWidth;
+    const sourceHeight = source instanceof HTMLVideoElement ? source.videoHeight : source.naturalHeight;
+    if (!sourceWidth || !sourceHeight) return;
+    const baseScale = Math.max(width / sourceWidth, height / sourceHeight);
     const motionScale = motionId === "zoom" ? 1 + progress * 0.07 : motionId === "still" ? 1 : 1.08;
     const scale = baseScale * motionScale;
-    const drawWidth = image.naturalWidth * scale;
-    const drawHeight = image.naturalHeight * scale;
+    const drawWidth = sourceWidth * scale;
+    const drawHeight = sourceHeight * scale;
     const travelX = motionId === "pan" ? (progress - 0.5) * width * 0.07 : 0;
     const travelY = motionId === "drift" ? (0.5 - progress) * height * 0.07 : 0;
-    context.drawImage(image, (width - drawWidth) / 2 + travelX, (height - drawHeight) / 2 + travelY, drawWidth, drawHeight);
+    context.drawImage(source, (width - drawWidth) / 2 + travelX, (height - drawHeight) / 2 + travelY, drawWidth, drawHeight);
     context.fillStyle = "rgba(24, 18, 12, 0.06)";
     context.fillRect(0, 0, width, height);
     context.save();
@@ -353,34 +411,41 @@ export function BookQuoteStudio() {
     if (showVoiceBy && displayedVoiceBy.trim()) context.fillText(`Voice By — ${displayedVoiceBy.trim()}`, textX, creditStart + (showQuoteBy && author.trim() ? 15 * outputScale : 0));
     context.restore();
     context.save();
-    const footerHeight = 54 * outputScale;
+    const footerHeight = 72 * outputScale;
     context.fillStyle = "rgba(12, 17, 16, 0.82)";
     context.fillRect(0, height - footerHeight, width, footerHeight);
     context.textAlign = "center";
-    context.font = `700 ${12 * outputScale}px 'Hind Siliguri', sans-serif`;
+    context.font = `700 ${15 * outputScale}px 'Hind Siliguri', sans-serif`;
     context.fillStyle = "rgba(255, 255, 255, 0.96)";
-    context.fillText("মধ্যরাতের চিরকুট  •  Design By Shovon", width / 2, height - 32 * outputScale);
-    context.font = `600 ${8.5 * outputScale}px 'Hind Siliguri', sans-serif`;
-    context.fillText("facebook.com/MidnightNoteofficial", width / 2, height - 15 * outputScale);
+    context.fillText("মধ্যরাতের চিরকুট  •  Design By Shovon", width / 2, height - 43 * outputScale);
+    context.font = `600 ${10 * outputScale}px 'Hind Siliguri', sans-serif`;
+    context.fillText("facebook.com/MidnightNoteofficial", width / 2, height - 20 * outputScale);
     context.restore();
   };
 
   const exportImage = () => {
-    const image = imageRef.current;
-    if (!image) return;
+    const source = uploadedVideo ? videoRef.current : imageRef.current;
+    if (!source) return;
     const canvas = document.createElement("canvas");
     canvas.width = activeFormat.width;
     canvas.height = activeFormat.height;
     const context = canvas.getContext("2d");
     if (!context) return;
-    drawFrame(context, image);
+    drawFrame(context, source);
     canvas.toBlob((blob) => blob && saveBlob(blob, "moddhorater-chirkut.png"), "image/png", 0.95);
   };
 
   const exportVideo = async () => {
-    const image = imageRef.current;
-    if (!image) return;
+    const source = uploadedVideo ? videoRef.current : imageRef.current;
+    if (!source) return;
+    const mp4MimeType = getSupportedMp4MimeType();
+    if (!mp4MimeType) {
+      setVideoError("এই ব্রাউজার MP4 তৈরি সমর্থন করে না। সর্বশেষ Chrome বা Edge ব্যবহার করুন।");
+      return;
+    }
     setIsExporting(true);
+    setVideoError("");
+    setExportProgress(0);
     const canvas = document.createElement("canvas");
     canvas.width = activeFormat.width;
     canvas.height = activeFormat.height;
@@ -389,22 +454,52 @@ export function BookQuoteStudio() {
       setIsExporting(false);
       return;
     }
-    const stream = canvas.captureStream(30);
-    const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+    const canvasStream = canvas.captureStream(30);
+    const outputTracks = [...canvasStream.getVideoTracks()];
+    let sourceStream: MediaStream | null = null;
+    if (source instanceof HTMLVideoElement) {
+      const captureStream = (source as HTMLVideoElement & { captureStream?: () => MediaStream }).captureStream;
+      if (captureStream) {
+        sourceStream = captureStream.call(source);
+        outputTracks.push(...sourceStream.getAudioTracks());
+      }
+    }
+    const stream = new MediaStream(outputTracks);
+    const recorder = new MediaRecorder(stream, { mimeType: mp4MimeType, videoBitsPerSecond: 8_000_000 });
     const chunks: Blob[] = [];
     recorder.ondataavailable = (event) => event.data.size && chunks.push(event.data);
     recorder.onstop = () => {
-      saveBlob(new Blob(chunks, { type: "video/webm" }), "moddhorater-chirkut-reel.webm");
+      saveBlob(new Blob(chunks, { type: mp4MimeType }), "moddhorater-chirkut-reel.mp4");
+      stream.getTracks().forEach((track) => track.stop());
+      sourceStream?.getTracks().forEach((track) => track.stop());
+      setExportProgress(100);
       setIsExporting(false);
     };
-    recorder.start();
+    recorder.onerror = () => {
+      stream.getTracks().forEach((track) => track.stop());
+      sourceStream?.getTracks().forEach((track) => track.stop());
+      setVideoError("MP4 তৈরি করা যায়নি। অন্য ভিডিও বা সর্বশেষ Chrome/Edge দিয়ে আবার চেষ্টা করুন।");
+      setIsExporting(false);
+    };
+    if (source instanceof HTMLVideoElement) {
+      source.pause();
+      source.currentTime = 0;
+      await source.play();
+    }
+    recorder.start(1000);
     const startedAt = performance.now();
-    const durationMs = duration * 1000;
+    const outputDuration = source instanceof HTMLVideoElement && Number.isFinite(source.duration) ? source.duration : duration;
+    const durationMs = outputDuration * 1000;
     const render = (now: number) => {
-      const progress = Math.min((now - startedAt) / durationMs, 1);
-      drawFrame(context, image, progress);
+      const elapsedProgress = Math.min((now - startedAt) / durationMs, 1);
+      const progress = source instanceof HTMLVideoElement && source.duration ? Math.min(source.currentTime / source.duration, 1) : elapsedProgress;
+      drawFrame(context, source, progress);
+      setExportProgress(Math.round(elapsedProgress * 100));
       if (progress < 1) requestAnimationFrame(render);
-      else recorder.stop();
+      else {
+        if (source instanceof HTMLVideoElement) source.pause();
+        recorder.stop();
+      }
     };
     requestAnimationFrame(render);
   };
@@ -429,7 +524,7 @@ export function BookQuoteStudio() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={exportImage}><ImageDown /> <span className="hidden sm:inline">ছবি</span></Button>
-          <Button size="sm" onClick={exportVideo} disabled={isExporting}><Film /> {isExporting ? "তৈরি হচ্ছে…" : "রিল এক্সপোর্ট"}</Button>
+          <Button size="sm" onClick={exportVideo} disabled={isExporting}><Film /> {isExporting ? `${exportProgress}%` : "MP4 এক্সপোর্ট"}</Button>
         </div>
       </header>
 
@@ -446,6 +541,11 @@ export function BookQuoteStudio() {
           <div className="panel-heading">
             <div><p className="eyebrow">TEMPLATE LIBRARY</p><h2>আবেগময় দৃশ্য</h2></div>
             <span className="count-badge">{bnNumber(scenes.length)}</span>
+          </div>
+          <div className="video-upload-card">
+            <input id="videoUpload" type="file" accept="video/*" onChange={handleVideoUpload} />
+            <label htmlFor="videoUpload"><Upload /><span><strong>নিজের ভিডিও আপলোড</strong><small>ভিডিও আপনার ডিভাইসেই থাকবে</small></span></label>
+            {uploadedVideo && <div className="uploaded-video-name"><span>{uploadedVideo.name}</span><Button type="button" variant="ghost" size="icon" onClick={removeUploadedVideo} aria-label="আপলোড করা ভিডিও সরান"><X /></Button></div>}
           </div>
           <label className="search-box">
             <Search />
@@ -487,7 +587,11 @@ export function BookQuoteStudio() {
             className={cn("reel-frame", current.tone, isPlaying && "is-playing")}
             style={{ aspectRatio: `${activeFormat.width} / ${activeFormat.height}`, "--motion-duration": `${duration}s` } as CSSProperties}
           >
-            <img className={`motion-${motionId}`} ref={imageRef} src={current.image} alt={`${current.title} আবেগময় টেমপ্লেট`} width={768} height={1376} style={{ objectPosition: current.position }} />
+            {uploadedVideo ? (
+              <video ref={videoRef} src={uploadedVideo.url} className="uploaded-video-preview" muted={false} playsInline loop={false} controls={false} onEnded={() => setIsPlaying(false)} />
+            ) : (
+              <img className={`motion-${motionId}`} ref={imageRef} src={current.image} alt={`${current.title} আবেগময় টেমপ্লেট`} width={768} height={1376} style={{ objectPosition: current.position }} />
+            )}
             <div className="film-grain" />
             <div ref={safeAreaRef} className="safe-area">
               <div
@@ -551,7 +655,14 @@ export function BookQuoteStudio() {
             </div>
           </div>
           <div className="playback" style={{ "--motion-duration": `${duration}s` } as CSSProperties}>
-            <Button size="icon" onClick={() => setIsPlaying((value) => !value)} aria-label={isPlaying ? "বিরতি" : "চালু করুন"}>
+              <Button size="icon" onClick={() => {
+                const next = !isPlaying;
+                setIsPlaying(next);
+                if (uploadedVideo && videoRef.current) {
+                  if (next) void videoRef.current.play();
+                  else videoRef.current.pause();
+                }
+              }} aria-label={isPlaying ? "বিরতি" : "চালু করুন"}>
               {isPlaying ? <Pause /> : <Play />}
             </Button>
             <span className="timecode">00:00</span>
@@ -567,8 +678,9 @@ export function BookQuoteStudio() {
             <SlidersHorizontal />
           </div>
           <div className="control-section">
-            <div className="control-label"><span>কোট</span><span>{quote.length}/৫০০</span></div>
-            <textarea maxLength={500} value={quote} onChange={(event) => setQuote(event.target.value)} />
+            <div className="control-label"><span>কোট</span><span>{bnNumber(quoteWordCount)}/{bnNumber(MAX_QUOTE_WORDS)} শব্দ</span></div>
+            <textarea value={quote} onChange={(event) => handleQuoteChange(event.target.value)} />
+            {quoteWordCount > 180 && <p className="quote-length-warning">দীর্ঘ কোটের সব লেখা দেখাতে ফন্ট ছোট করুন এবং কোট বক্স চওড়া করুন।</p>}
           </div>
           <div className="control-section quote-library">
             <div className="control-label"><span className="inline-flex items-center gap-1"><Quote /> কোট লাইব্রেরি</span><span>{visibleQuotes.length}টি</span></div>
@@ -675,8 +787,9 @@ export function BookQuoteStudio() {
           <div className="export-card">
             <div className="export-icon"><LibraryBig /></div>
             <div><strong>Ready for Facebook</strong><span>{duration} সেকেন্ড · {activeMotion.label} · {activeFormat.detail}</span></div>
-            <Button onClick={exportVideo} disabled={isExporting}><Download /> {isExporting ? "রেন্ডারিং" : "ভিডিও"}</Button>
+            <Button onClick={exportVideo} disabled={isExporting}><Download /> {isExporting ? `${exportProgress}%` : "MP4"}</Button>
           </div>
+          {videoError && <p className="video-error" role="alert">{videoError}</p>}
         </aside>
       </main>
     </div>

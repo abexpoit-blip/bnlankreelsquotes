@@ -178,6 +178,17 @@
   .filter-row { display: flex; gap: 5px; overflow-x: auto; padding: 11px 0; scrollbar-width: none; }
   .filter-row button { height: 27px; flex: none; padding-inline: 9px; font-size: 10px; }
   .template-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: max-content; gap: 8px; height: calc(100% - 122px); overflow-y: auto; padding: 3px 3px 24px; scrollbar-width: thin; }
+  .video-upload-card { margin-bottom: 12px; }
+  .video-upload-card > input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .video-upload-card > label { display: flex; align-items: center; gap: 9px; min-height: 48px; padding: 9px 10px; border: 1px dashed color-mix(in oklab, var(--primary) 52%, var(--border)); border-radius: 7px; background: color-mix(in oklab, var(--primary) 6%, var(--card)); cursor: pointer; }
+  .video-upload-card > label > svg { width: 18px; color: var(--primary); flex: none; }
+  .video-upload-card strong, .video-upload-card small { display: block; line-height: 1.3; }
+  .video-upload-card strong { font-size: 11px; }
+  .video-upload-card small { color: var(--muted-foreground); font-size: 9px; }
+  .uploaded-video-name { display: grid; grid-template-columns: minmax(0, 1fr) 30px; align-items: center; gap: 5px; margin-top: 6px; padding-left: 8px; color: var(--muted-foreground); font-size: 9px; }
+  .uploaded-video-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .uploaded-video-name button { width: 30px; height: 30px; }
+  .uploaded-video-name svg { width: 13px; }
   .template-card { width: 100%; height: auto !important; aspect-ratio: 9/16; padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 6px; position: relative; display: block; white-space: normal; box-shadow: 0 7px 14px color-mix(in oklab, var(--foreground) 10%, transparent); }
   .template-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .template-card.is-selected { outline: 2px solid var(--primary); outline-offset: 2px; }
@@ -191,7 +202,8 @@
   .canvas-toolbar > div { display: flex; align-items: center; gap: 7px; }
   .canvas-toolbar svg { width: 13px; }
   .reel-frame { width: min(100%, 414px); aspect-ratio: 9/16; overflow: hidden; position: relative; border-radius: 8px; background: var(--foreground); box-shadow: 0 32px 70px color-mix(in oklab, var(--foreground) 28%, transparent), 0 0 0 1px color-mix(in oklab, var(--foreground) 22%, transparent); }
-  .reel-frame > img { width: 100%; height: 100%; object-fit: cover; transform-origin: center; }
+  .reel-frame > img, .reel-frame > video { width: 100%; height: 100%; object-fit: cover; transform-origin: center; }
+  .uploaded-video-preview { display: block; background: var(--foreground); }
   .reel-frame.is-playing > img.motion-zoom { animation: reel-zoom var(--motion-duration) ease-in-out infinite alternate; }
   .reel-frame.is-playing > img.motion-pan { animation: reel-pan var(--motion-duration) ease-in-out infinite alternate; }
   .reel-frame.is-playing > img.motion-drift { animation: reel-drift var(--motion-duration) ease-in-out infinite alternate; }
@@ -222,11 +234,11 @@
   .drag-status svg { width: 13px; height: 13px; color: var(--primary); }
   .opacity-presets { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 8px; }
   .opacity-presets button { min-width: 0; height: 29px; padding-inline: 4px; font-size: 9px; }
-  .reel-brand { position: absolute; bottom: -5.3%; left: -5.3%; width: 110.6%; min-height: 6.9%; padding: 5px 7%; display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--primary-foreground); background: color-mix(in oklab, var(--foreground) 84%, transparent); font-size: 9px; text-decoration: none; text-shadow: 0 1px 4px color-mix(in oklab, var(--foreground) 86%, transparent); white-space: nowrap; }
+  .reel-brand { position: absolute; bottom: -5.3%; left: -5.3%; width: 110.6%; min-height: 9.4%; padding: 7px 7%; display: flex; align-items: center; justify-content: center; gap: 9px; color: var(--primary-foreground); background: color-mix(in oklab, var(--foreground) 88%, transparent); font-size: 10px; text-decoration: none; text-shadow: 0 1px 4px color-mix(in oklab, var(--foreground) 86%, transparent); white-space: nowrap; }
   .reel-brand strong, .reel-brand small { display: block; line-height: 1.15; }
-  .reel-brand strong { font-size: 9px; letter-spacing: .04em; }
-  .reel-brand small { font-size: 7px; opacity: .84; }
-  .brand-mini { width: 19px; height: 19px; display: grid; place-items: center; border: 1px solid color-mix(in oklab, var(--primary-foreground) 55%, transparent); border-radius: 50%; font-family: var(--font-display); }
+  .reel-brand strong { font-size: 11px; letter-spacing: 0; }
+  .reel-brand small { font-size: 8px; opacity: .88; }
+  .brand-mini { width: 24px; height: 24px; display: grid; place-items: center; border: 1px solid color-mix(in oklab, var(--primary-foreground) 55%, transparent); border-radius: 50%; font-family: var(--font-display); }
   .playback { width: min(100%, 480px); display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
   .playback button { flex: none; }
   .timecode { font: 500 9px monospace; color: var(--muted-foreground); }
@@ -240,6 +252,8 @@
   .control-label svg { width: 13px; height: 13px; }
   .control-section textarea, .control-section input:not([type="range"]) { width: 100%; border: 1px solid var(--border); border-radius: 6px; background: var(--background); padding: 9px 10px; outline: none; font-size: 13px; }
   .control-section textarea { min-height: 150px; resize: vertical; font-family: var(--font-display); line-height: 1.6; }
+  .quote-length-warning, .video-error { margin-top: 7px; color: var(--destructive); font-size: 10px; line-height: 1.45; }
+  .video-error { padding: 8px; border: 1px solid color-mix(in oklab, var(--destructive) 35%, var(--border)); border-radius: 6px; background: color-mix(in oklab, var(--destructive) 7%, var(--card)); }
   .control-section input:focus, .control-section textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 12%, transparent); }
   .control-section input[type="range"] { width: 100%; accent-color: var(--primary); }
   .quote-library .control-label svg { width: 14px; }
