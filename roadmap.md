@@ -16,3 +16,4 @@
 - [x] Expand quotes to 500 characters with auto-fit and adjustable quote-box width across preview and exports.
 - [x] Replace 20 generic Japan scenes with premium samurai districts, castles, historic places, gardens, and iconic nature.
 - [x] Add selectable cinematic zoom, pan, vertical drift, and still motion shared by preview and video export.
+- [x] Restore direct 10–64px quote sizing, reliable drag placement, and adjustable quote-background transparency in preview and exports.

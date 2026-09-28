@@ -11,8 +11,11 @@ import {
   Facebook,
   ImageDown,
   LibraryBig,
+  Minus,
+  Move,
   Pause,
   Play,
+  Plus,
   Search,
   SlidersHorizontal,
   Sparkles,
@@ -184,6 +187,7 @@ export function BookQuoteStudio() {
   const [motionId, setMotionId] = useState<(typeof motionOptions)[number]["id"]>("zoom");
   const [formatId, setFormatId] = useState<(typeof videoFormats)[number]["id"]>("reel-hd");
   const [quoteStyleId, setQuoteStyleId] = useState<(typeof quoteStyles)[number]["id"]>("glass");
+  const [quoteBackgroundOpacity, setQuoteBackgroundOpacity] = useState(48);
   const [quoteLibraryFilter, setQuoteLibraryFilter] = useState("সব");
   const [mobilePanel, setMobilePanel] = useState<"templates" | "canvas" | "edit">("canvas");
   const imageRef = useRef<HTMLImageElement>(null);
@@ -203,7 +207,8 @@ export function BookQuoteStudio() {
   const activeFormat = videoFormats.find((item) => item.id === formatId) ?? videoFormats[0];
   const activeMotion = motionOptions.find((item) => item.id === motionId) ?? motionOptions[0];
   const displayedVoiceBy = sameCreditPerson ? author : voiceBy;
-  const fittedFontSize = Math.min(fontSize, quote.length > 400 ? 12 : quote.length > 300 ? 13 : quote.length > 220 ? 14 : quote.length > 150 ? 15 : fontSize);
+  const fittedFontSize = fontSize;
+  const textShadowColor = /^#(?:f|e|d|c|b|a)/i.test(textColor) ? "rgba(0, 0, 0, 0.92)" : "rgba(255, 255, 255, 0.94)";
 
   const visibleTemplates = useMemo(
     () => templates.filter((template) =>
@@ -244,7 +249,7 @@ export function BookQuoteStudio() {
     const deltaY = event.clientY - interaction.startY;
     if (interaction.mode === "resize") {
       const delta = ((deltaX + deltaY) / 2 / bounds.width) * 52;
-      setFontSize(Math.round(Math.min(38, Math.max(12, interaction.fontSize + delta))));
+      setFontSize(Math.round(Math.min(64, Math.max(10, interaction.fontSize + delta))));
       return;
     }
     if (interaction.mode === "width") {
@@ -309,8 +314,9 @@ export function BookQuoteStudio() {
     const creditCount = Number(showQuoteBy && Boolean(author.trim())) + Number(showVoiceBy && Boolean(displayedVoiceBy.trim()));
     const panelTop = startY - 25 * outputScale;
     const panelBottom = startY + Math.max(lines.length - 1, 0) * lineHeight + (creditCount ? 56 : 24) * outputScale;
+    const panelOpacity = quoteBackgroundOpacity / 100;
     if (quoteStyleId === "glass") {
-      context.fillStyle = "rgba(10, 17, 20, 0.48)";
+      context.fillStyle = `rgba(10, 17, 20, ${panelOpacity})`;
       context.strokeStyle = "rgba(255, 255, 255, 0.16)";
       context.lineWidth = outputScale;
       context.beginPath();
@@ -319,10 +325,25 @@ export function BookQuoteStudio() {
       context.stroke();
       context.fillStyle = textColor;
     }
-    if (current.textStyle === "light") {
-      context.shadowColor = "rgba(0, 0, 0, 0.78)";
-      context.shadowBlur = 12 * outputScale;
+    if (quoteStyleId === "editorial" && panelOpacity > 0) {
+      const gradient = context.createLinearGradient(-(quoteWidth / 200) * width, 0, (quoteWidth / 200) * width, 0);
+      gradient.addColorStop(0, `rgba(10, 17, 20, ${panelOpacity})`);
+      gradient.addColorStop(1, "rgba(10, 17, 20, 0)");
+      context.fillStyle = gradient;
+      context.fillRect(-(quoteWidth / 200) * width - 12 * outputScale, panelTop, (quoteWidth / 100) * width + 24 * outputScale, panelBottom - panelTop);
+      context.fillStyle = textColor;
     }
+    if (quoteStyleId === "spotlight" && panelOpacity > 0) {
+      const radius = (quoteWidth / 170) * width;
+      const glow = context.createRadialGradient(0, 0, 0, 0, 0, radius);
+      glow.addColorStop(0, `rgba(10, 17, 20, ${panelOpacity})`);
+      glow.addColorStop(1, "rgba(10, 17, 20, 0)");
+      context.fillStyle = glow;
+      context.fillRect(-(quoteWidth / 200) * width - 20 * outputScale, panelTop, (quoteWidth / 100) * width + 40 * outputScale, panelBottom - panelTop);
+      context.fillStyle = textColor;
+    }
+    context.shadowColor = textShadowColor;
+    context.shadowBlur = 12 * outputScale;
     lines.forEach((line, index) => context.fillText(line, textX, startY + index * lineHeight));
     context.shadowBlur = 0;
     context.font = `600 ${10.5 * outputScale}px 'Hind Siliguri', sans-serif`;
@@ -481,7 +502,9 @@ export function BookQuoteStudio() {
                   left: `${quotePosition.x}%`,
                   transform: `translate(-50%, -50%) rotate(${current.quoteRotate}deg)`,
                   fontFamily: activeFont.family,
-                }}
+                  "--quote-bg-opacity": `${quoteBackgroundOpacity}%`,
+                  "--quote-text-shadow": textShadowColor,
+                } as CSSProperties}
                 onPointerDown={(event) => beginInteraction(event, "move")}
                 onPointerMove={updateInteraction}
                 onPointerUp={endInteraction}
@@ -499,8 +522,8 @@ export function BookQuoteStudio() {
                   className="resize-handle"
                   role="slider"
                   aria-label="লেখা বড় বা ছোট করুন"
-                  aria-valuemin={12}
-                  aria-valuemax={38}
+                  aria-valuemin={10}
+                  aria-valuemax={64}
                   aria-valuenow={fontSize}
                   tabIndex={0}
                   onPointerDown={(event) => beginInteraction(event, "resize")}
@@ -581,12 +604,25 @@ export function BookQuoteStudio() {
           </div>
           <div className="control-section">
             <div className="control-label"><span>লেখার মাপ</span><strong>{fontSize}px</strong></div>
-            <input aria-label="লেখার মাপ" type="range" min="12" max="38" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
-            {fittedFontSize < fontSize && <p className="auto-fit-note">দীর্ঘ কোটটি ফ্রেমে রাখতে {fittedFontSize}px-এ মানানো হয়েছে</p>}
+            <div className="size-control">
+              <Button type="button" variant="outline" size="icon" onClick={() => setFontSize((size) => Math.max(10, size - 1))} aria-label="লেখা ছোট করুন"><Minus /></Button>
+              <input aria-label="লেখার মাপ" type="range" min="10" max="64" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} />
+              <Button type="button" variant="outline" size="icon" onClick={() => setFontSize((size) => Math.min(64, size + 1))} aria-label="লেখা বড় করুন"><Plus /></Button>
+            </div>
+            <div className="drag-status"><Move /><span>কোটটি ধরে যেকোনো দিকে সরান</span></div>
           </div>
           <div className="control-section">
             <div className="control-label"><span>কোট বক্সের প্রস্থ</span><strong>{quoteWidth}%</strong></div>
             <input aria-label="কোট বক্সের প্রস্থ" type="range" min="42" max="92" value={quoteWidth} onChange={(event) => setQuoteWidth(Number(event.target.value))} />
+          </div>
+          <div className="control-section">
+            <div className="control-label"><span>কোট ব্যাকগ্রাউন্ড</span><strong>{quoteBackgroundOpacity === 0 ? "সম্পূর্ণ স্বচ্ছ" : `${quoteBackgroundOpacity}%`}</strong></div>
+            <input aria-label="কোট ব্যাকগ্রাউন্ডের স্বচ্ছতা" type="range" min="0" max="100" value={quoteBackgroundOpacity} onChange={(event) => setQuoteBackgroundOpacity(Number(event.target.value))} />
+            <div className="opacity-presets">
+              {[0, 25, 50, 75, 100].map((opacity) => (
+                <Button key={opacity} type="button" size="sm" variant={quoteBackgroundOpacity === opacity ? "default" : "outline"} onClick={() => setQuoteBackgroundOpacity(opacity)}>{opacity === 0 ? "স্বচ্ছ" : `${opacity}%`}</Button>
+              ))}
+            </div>
           </div>
           <div className="control-section">
             <label className="control-label" htmlFor="textColor"><span>লেখার রঙ</span><strong>{textColor.toUpperCase()}</strong></label>

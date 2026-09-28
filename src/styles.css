@@ -198,14 +198,14 @@
   .reel-frame.is-playing > img.motion-still { animation: none; }
   .film-grain { position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: repeating-linear-gradient(110deg, transparent 0 3px, color-mix(in oklab, var(--card) 7%, transparent) 4px); mix-blend-mode: soft-light; }
   .safe-area { position: absolute; inset: 5%; }
-  .printed-quote { position: absolute; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; text-shadow: 0 .35px 0 color-mix(in oklab, var(--card) 25%, transparent); filter: saturate(.72) contrast(1.18); mix-blend-mode: multiply; cursor: grab; touch-action: none; user-select: none; outline: 1px dashed color-mix(in oklab, currentColor 42%, transparent); outline-offset: 7px; }
+  .printed-quote { position: absolute; z-index: 2; font-family: var(--font-display); font-weight: 600; line-height: 1.42; text-wrap: balance; overflow-wrap: anywhere; text-shadow: 0 2px 5px var(--quote-text-shadow), 0 0 14px var(--quote-text-shadow); filter: none; mix-blend-mode: normal; cursor: grab; touch-action: none; user-select: none; outline: 1px dashed color-mix(in oklab, currentColor 58%, transparent); outline-offset: 7px; }
   .printed-quote:active { cursor: grabbing; }
   .printed-quote p { white-space: pre-wrap; }
-  .printed-quote.text-light { padding: 13px 15px; text-shadow: 0 2px 12px color-mix(in oklab, var(--foreground) 92%, transparent); filter: none; mix-blend-mode: normal; }
-  .printed-quote.text-bold { padding: 10px 12px; border-left: 3px solid currentColor; background: color-mix(in oklab, var(--card) 72%, transparent); text-shadow: none; filter: none; mix-blend-mode: normal; }
-  .printed-quote.quote-style-glass { padding: 18px 16px 14px; border: 1px solid color-mix(in oklab, var(--primary-foreground) 14%, transparent); border-left: 3px solid color-mix(in oklab, var(--primary) 78%, var(--primary-foreground)); border-radius: 8px; background: color-mix(in oklab, var(--foreground) 48%, transparent); box-shadow: 0 14px 34px color-mix(in oklab, var(--foreground) 32%, transparent); backdrop-filter: blur(7px); filter: none; mix-blend-mode: normal; }
-  .printed-quote.quote-style-editorial { padding: 12px 15px; border-left: 3px solid currentColor; background: linear-gradient(90deg, color-mix(in oklab, var(--foreground) 56%, transparent), transparent); filter: none; mix-blend-mode: normal; }
-  .printed-quote.quote-style-spotlight { padding: 18px; border: 0; background: radial-gradient(ellipse at center, color-mix(in oklab, var(--foreground) 58%, transparent), transparent 74%); text-shadow: 0 2px 14px color-mix(in oklab, var(--foreground) 92%, transparent); filter: none; mix-blend-mode: normal; }
+  .printed-quote.text-light { padding: 13px 15px; }
+  .printed-quote.text-bold { padding: 10px 12px; border-left: 3px solid currentColor; }
+  .printed-quote.quote-style-glass { padding: 18px 16px 14px; border: 1px solid color-mix(in oklab, var(--primary-foreground) 14%, transparent); border-left: 3px solid color-mix(in oklab, var(--primary) 78%, var(--primary-foreground)); border-radius: 8px; background: color-mix(in oklab, var(--foreground) var(--quote-bg-opacity), transparent); box-shadow: 0 14px 34px color-mix(in oklab, var(--foreground) 32%, transparent); backdrop-filter: blur(7px); }
+  .printed-quote.quote-style-editorial { padding: 12px 15px; border-left: 3px solid currentColor; background: linear-gradient(90deg, color-mix(in oklab, var(--foreground) var(--quote-bg-opacity), transparent), transparent); }
+  .printed-quote.quote-style-spotlight { padding: 18px; border: 0; background: radial-gradient(ellipse at center, color-mix(in oklab, var(--foreground) var(--quote-bg-opacity), transparent), transparent 74%); }
   .quote-mark { position: absolute; top: -18px; left: -2px; font-size: 30px; line-height: 1; opacity: .16; }
   .credit-row { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 10px; padding-top: 8px; border-top: 1px solid color-mix(in oklab, currentColor 18%, transparent); font-family: var(--font-sans); }
   .credit-pill { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 3px 6px; border: 1px solid color-mix(in oklab, var(--primary-foreground) 12%, transparent); border-radius: 999px; background: color-mix(in oklab, var(--primary-foreground) 9%, transparent); line-height: 1.2; }
@@ -215,6 +215,13 @@
   .resize-handle { position: absolute; right: -12px; bottom: -12px; width: 18px; height: 18px; border: 2px solid var(--primary-foreground); border-radius: 50%; background: var(--primary); box-shadow: 0 2px 7px color-mix(in oklab, var(--foreground) 45%, transparent); cursor: nwse-resize; touch-action: none; }
   .width-resize-handle { position: absolute; right: -13px; top: 50%; width: 12px; height: 34px; transform: translateY(-50%); border: 2px solid var(--primary-foreground); border-radius: 6px; background: var(--accent); box-shadow: 0 2px 7px color-mix(in oklab, var(--foreground) 45%, transparent); cursor: ew-resize; touch-action: none; }
   .auto-fit-note { margin-top: 6px; color: var(--muted-foreground); font-size: 9px; line-height: 1.4; }
+  .size-control { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; gap: 8px; }
+  .size-control button { width: 36px; height: 36px; }
+  .size-control svg { width: 15px; }
+  .drag-status { display: flex; align-items: center; gap: 6px; margin-top: 8px; color: var(--muted-foreground); font-size: 10px; }
+  .drag-status svg { width: 13px; height: 13px; color: var(--primary); }
+  .opacity-presets { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 8px; }
+  .opacity-presets button { min-width: 0; height: 29px; padding-inline: 4px; font-size: 9px; }
   .reel-brand { position: absolute; bottom: -5.3%; left: -5.3%; width: 110.6%; min-height: 6.9%; padding: 5px 7%; display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--primary-foreground); background: color-mix(in oklab, var(--foreground) 84%, transparent); font-size: 9px; text-decoration: none; text-shadow: 0 1px 4px color-mix(in oklab, var(--foreground) 86%, transparent); white-space: nowrap; }
   .reel-brand strong, .reel-brand small { display: block; line-height: 1.15; }
   .reel-brand strong { font-size: 9px; letter-spacing: .04em; }
